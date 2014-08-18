@@ -22,11 +22,14 @@
 #include <stdint.h>
 
 #include "inc/util_macro.h"
+#include "inc/avr-fixed.h"
 
 // Number of counts the encoder has rotated.
 DECLARE_I2C_REGISTER(int32_t, encoder_count);
+DECLARE_I2C_REGISTER(FIXED1616, encoder_speed_precise);
 
 // Called to configure encoder hardware on startup.
 extern void init_encoder();
+extern void init_encoder_timer();
 
 #endif  // INC_ENCODER_H_

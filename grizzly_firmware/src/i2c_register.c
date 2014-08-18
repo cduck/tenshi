@@ -65,6 +65,8 @@ extern unsigned char provide_i2c_reg(unsigned char reg) {
   AUTO_PROVIDE_REG(REG_ERROR_COUNT, REG_ERROR_COUNT_TYPE, error_count);
   AUTO_PROVIDE_REG(REG_ENCODER_COUNT, REG_ENCODER_COUNT_TYPE,
       get_encoder_count_dangerous());
+  AUTO_PROVIDE_REG(REG_ENCODER_SPEED_PRECISE, REG_ENCODER_SPEED_PRECISE_TYPE,
+      get_encoder_speed_precise_dangerous());
   AUTO_PROVIDE_REG(REG_PID_KP, REG_PID_KP_TYPE, get_kp_dangerous());
   AUTO_PROVIDE_REG(REG_PID_KI, REG_PID_KI_TYPE, get_ki_dangerous());
   AUTO_PROVIDE_REG(REG_PID_KD, REG_PID_KD_TYPE, get_kd_dangerous());
@@ -111,6 +113,8 @@ extern void set_i2c_reg(unsigned char reg, unsigned char val) {
 
   AUTO_SET_REG(REG_ENCODER_COUNT, REG_ENCODER_COUNT_TYPE,
       get_encoder_count_addr());
+  AUTO_SET_REG(REG_ENCODER_SPEED_PRECISE, REG_ENCODER_SPEED_PRECISE_TYPE,
+      get_encoder_speed_precise_addr());
 
   AUTO_SET_REG(REG_PID_KP, REG_PID_KP_TYPE, get_kp_addr());
   AUTO_SET_REG(REG_PID_KI, REG_PID_KI_TYPE, get_ki_addr());

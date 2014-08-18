@@ -28,19 +28,16 @@ DECLARE_I2C_REGISTER_C(FIXED1616, kd);
 // It is not running in interrupt context
 int do_pid_speed(FIXED1616 target) {
   // PID state
-  static int32_t old_encoder_val = 0;
-  static int32_t old_speed = 0;
+  static FIXED1616 old_speed = 0;
   static FIXED1616 iaccum = 0;
 
-  int32_t encoder_val = get_encoder_count();
-  int32_t speed = encoder_val - old_encoder_val;
-  old_encoder_val = encoder_val;
+  FIXED1616 speed = get_encoder_speed_precise();
 
-  int32_t setpoint = fixed_to_int(target);
-  int32_t error = setpoint - speed;
+  FIXED1616 setpoint = target;
+  FIXED1616 error = setpoint - speed;
 
   // pray for no overflow (rest of function too)
-  FIXED1616 error_f = int_to_fixed(error);
+  FIXED1616 error_f = error;
   // Use derivative on measurement -d(speed)/dt instead of d(error)/dt
   // which equals d(setpoint-speed)/dt which equals -d(speed)/dt if setpoint
   // doesn't change

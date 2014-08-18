@@ -57,6 +57,8 @@ extern void set_i2c_reg(unsigned char reg, unsigned char val);
 #define REG_ERROR_COUNT_TYPE          uint8_t
 #define REG_ENCODER_COUNT             0x20
 #define REG_ENCODER_COUNT_TYPE        int32_t
+#define REG_ENCODER_SPEED_PRECISE     0x24
+#define REG_ENCODER_SPEED_PRECISE_TYPE FIXED1616
 #define REG_PID_KP                    0x30
 #define REG_PID_KP_TYPE               FIXED1616
 #define REG_PID_KI                    0x34
