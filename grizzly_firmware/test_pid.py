@@ -22,6 +22,23 @@ from __future__ import print_function
 import serial
 import time
 import atexit
+import sys
+
+
+
+speedArr = []
+for i in range(1, len(sys.argv)):
+    try:
+        speedArr.append(float(sys.argv[i]))
+    except ValueError:
+        pass
+if len(speedArr) <= 0:
+    print('Enter a list of speeds as arguments.')
+    print('Example:\n\t%s 5.1 -2.3' % sys.argv[0])
+    speedArr = [1.0]
+print('Speeds: ',speedArr)
+
+
 
 filename = '/dev/ttyUSB0'
 
@@ -49,19 +66,19 @@ dev.write(b'P\n')
 
 time.sleep(0.5)
 
-dev.write(b'[ 0x1e 1 5 0 0 0 0 100 0 0 ]\n')
-# Move motor forward at full speed
+for s in speedArr:
+    fixed = int(s*0x10000)
+    b1 = fixed>>24 & 0xFF  # High byte of integer
+    b2 = fixed>>16 & 0xFF  # Low byte of integer
+    b3 = fixed>>8  & 0xFF  # High byte of fraction
+    b4 = fixed     & 0xFF  # Low byte of fraction
 
-print('Moving forward at full speed.')
+    dev.write(b'[ 0x1e 1 5 0 0 0 %u %u %u %u ]\n' % (b1, b2, b3, b4))
+    # Move motor forward at given speed
 
-time.sleep(3)
+    print('Moving at speed: %f (0x%02X%02X.%02X%02X)' % (s, b1, b2, b3, b4))
 
-dev.write(b'[ 0x1e 1 5 0 0 0 0 0x9c 0xff 0 ]\n')
-# Move
-
-print('Moving backward at full speed.')
-
-time.sleep(3)
+    time.sleep(1)
 
 dev.write(b'[ 0x1e 1 5 0 0 0 0 0 0 0 ]\n')
 # Stop motor
