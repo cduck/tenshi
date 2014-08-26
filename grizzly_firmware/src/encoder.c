@@ -108,7 +108,6 @@ ISR(PCINT0_vect) {
   TCNT1 = 0;  // Clear count
   // 256 as a fixed point number divided by time as an integer
   FIXED1616 speed = 0x1000 / time;  // Units: encoder ticks per control loop
-  set_encoder_speed_precise_dangerous(speed);
 
   unsigned char ioport_copy = PIN(PINDEF_ENCA);
   static unsigned char old_state = 0;
@@ -120,6 +119,12 @@ ISR(PCINT0_vect) {
   set_encoder_count_dangerous(get_encoder_count_dangerous() +
       encoder_transition_table[old_state << 2 | new_state]);
   old_state = new_state;
+
+  if (new_state < old_state) {
+    // Direction is backwards
+    speed = -speed;
+  }
+  set_encoder_speed_precise_dangerous(speed);
 }
 
 // Interrupt for precise speed timeout if speed is near zero
