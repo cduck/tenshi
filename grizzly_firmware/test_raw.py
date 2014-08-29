@@ -47,7 +47,7 @@ dev = serial.Serial(filename, 115200, timeout=0)
 @atexit.register
 def stop_motor():
     print('Ending test.')
-    dev.write(b'[ 0x1e 1 3 0 0 0 0 0 0 0 ]\n')
+    dev.write(b'[ 0x1e 1 1 0 0 0 0 0 0 0 ]\n')
     time.sleep(0.5)
 
 dev.write(b'm\n')
@@ -73,12 +73,12 @@ for s in speedArr:
     b3 = fixed>>8  & 0xFF  # High byte of fraction
     b4 = fixed     & 0xFF  # Low byte of fraction
 
-    dev.write(b'[ 0x1e 1 3 0 0 0 %u %u %u %u ]\n' % (b1, b2, b3, b4))
+    dev.write(b'[ 0x1e 1 1 0 0 0 %u %u %u %u ]\n' % (b3, b2, b1, b4))
     # Move motor forward at given speed
 
     print('Moving at speed: %f (0x%02X%02X.%02X%02X)' % (s, b1, b2, b3, b4))
 
     time.sleep(1)
 
-dev.write(b'[ 0x1e 1 3 0 0 0 0 0 0 0 ]\n')
+dev.write(b'[ 0x1e 1 1 0 0 0 0 0 0 0 ]\n')
 # Stop motor

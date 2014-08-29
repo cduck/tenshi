@@ -205,7 +205,8 @@ static inline void update_leds(unsigned char pwm_mode,
     set_all_leds(LED_OFF);
   } else if (abs(pwm_val) < 2) {
     // Turn the LEDs off if the motors are being moved so slowly they are "off"
-    set_all_leds(LED_OFF);
+    // set_all_leds(LED_OFF);
+    set_all_leds(LED_ON);
   } else {
     if (fwd) {
       set_red_led(LED_OFF);

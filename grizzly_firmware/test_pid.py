@@ -50,6 +50,14 @@ def stop_motor():
     dev.write(b'[ 0x1e 1 5 0 0 0 0 0 0 0 ]\n')
     time.sleep(0.5)
 
+def set_pid():
+    print('Setting PID constants.')
+    dev.write(b'[ 0x1e 0x30 ' + \
+    b'0 0 0x8 0 ' +  # P Const \
+    b'0 0 1 0 ' +  # I Const \
+    b'0 0 0 1 ]\n')  # D Const
+    time.sleep(0.5)
+
 dev.write(b'm\n')
 # Switch mode
 
@@ -59,26 +67,37 @@ dev.write(b'4\n')
 dev.write(b'3\n')
 # 100KHz
 
-time.sleep(0.5)
+time.sleep(0.3)
 
 dev.write(b'P\n')
 # Enable pull-ups
 
-time.sleep(0.5)
+time.sleep(0.3)
 
-for s in speedArr:
-    fixed = int(s*0x10000)
-    b1 = fixed>>24 & 0xFF  # High byte of integer
-    b2 = fixed>>16 & 0xFF  # Low byte of integer
-    b3 = fixed>>8  & 0xFF  # High byte of fraction
-    b4 = fixed     & 0xFF  # Low byte of fraction
+set_pid()
 
-    dev.write(b'[ 0x1e 1 5 0 0 0 %u %u %u %u ]\n' % (b1, b2, b3, b4))
-    # Move motor forward at given speed
+time.sleep(0.3)
 
-    print('Moving at speed: %f (0x%02X%02X.%02X%02X)' % (s, b1, b2, b3, b4))
+repeat = 1
+if len(speedArr)==1:
+	repeat = 100
 
-    time.sleep(1)
+for i in range(repeat):
+    for s in speedArr:
+        fixed = int(s*0x10000)
+        b1 = fixed>>24 & 0xFF  # High byte of integer
+        b2 = fixed>>16 & 0xFF  # Low byte of integer
+        b3 = fixed>>8  & 0xFF  # High byte of fraction
+        b4 = fixed     & 0xFF  # Low byte of fraction
+    
+        dev.write(b'[ 0x1e 1 5 0 0 0 %u %u %u %u ]\n' % (b3, b2, b1, b4))
+        # Move motor forward at given speed
+    
+        print('Moving at speed: %f (0x%02X%02X.%02X%02X)' % (s, b1, b2, b3, b4))
+    
+        time.sleep(.5)
+        dev.write(b'[ 0x1e 1 5 0 0 %u %u %u %u ]\n' % (b3, b2, b1, b4))
+        time.sleep(.5)
 
 dev.write(b'[ 0x1e 1 5 0 0 0 0 0 0 0 ]\n')
 # Stop motor
