@@ -151,13 +151,13 @@ void radio_send_xbee(uint8_t *data, size_t len) {
 }
 void *ndAlloc(NDL3_size size, void * userdata) {
   (void) userdata;
-  void *ret = pvPortMalloc(size);
+  void *ret = malloc(size);
   while (!ret) {}
   return ret;
 }
 void ndFree(void * to_free, void * userdata) {
   (void) userdata;
-  vPortFree(to_free);
+  free(to_free);
 }
 
 
@@ -194,7 +194,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       // Trust this to free recvMsg
       runtimeRecieveUbjson(recvMsg, recvSize);
     } else {
-      vPortFree(recvMsg);
+      free(recvMsg);
     }
 
     recvMsg = NULL;
@@ -205,7 +205,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       // Trust this to free recvMsg
       runtimeRecieveUbjson(recvMsg, recvSize);
     } else {
-      vPortFree(recvMsg);
+      free(recvMsg);
     }
 
     recvMsg = NULL;
@@ -213,7 +213,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
     NDL3_recv(target, NDL3_STRING_PORT, (void **) &recvMsg, &recvSize);
     // Do stuff with recieved message
 
-    vPortFree(recvMsg);
+    free(recvMsg);
 
     recvMsg = NULL;
     recvSize = 0;
@@ -223,7 +223,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       // Trust this to free recvMsg
       runtimeRecieveCode(recvMsg, recvSize);
     } else {
-      vPortFree(recvMsg);
+      free(recvMsg);
     }
 
     recvMsg = NULL;
@@ -244,9 +244,9 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       }
 
       printf("Got config data\n");
-      vPortFree(recvMsg);
+      free(recvMsg);
     } else {
-      vPortFree(recvMsg);
+      free(recvMsg);
     }
 
 
@@ -280,7 +280,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
             recXbeePacket->length-sizeof(xbee_rx64_header)-prefixLen);
         }
       }
-      vPortFree(recXbeePacket);
+      free(recXbeePacket);
     }
 
     err = NDL3_pop_error(target);
