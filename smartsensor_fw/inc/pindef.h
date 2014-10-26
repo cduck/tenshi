@@ -32,6 +32,7 @@
 #define A_IN1      ((1 << MUX3))  // ADC 8
 #define A_IN2      ((1 << MUX2) | (1 << MUX1))  // ADC 6
 #define A_IN3      ((1 << MUX2) | (1 << MUX1) | (1 << MUX0))  // ADC 7
+#define LED_STATUS PIN_DEFINITION(C, 2)
 
 #define SS_UART_TX   PIN_DEFINITION(B, 0)
 #define SS_UART_RX   PIN_DEFINITION(A, 7)
