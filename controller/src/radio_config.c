@@ -54,7 +54,7 @@ void receiveConfigPort(config_port *port, size_t len) {
 }
 
 config_port *getDeviceList() {
-  config_port *port = pvPortMalloc(sizeof(uint8_t) + sizeof(uint32_t)
+  config_port *port = malloc(sizeof(uint8_t) + sizeof(uint32_t)
                                                    + SMART_ID_LEN*numSensors);
   port->id = ID_DEVICE_GET_LIST;
   port->data.device_list.count = numSensors;
@@ -109,7 +109,7 @@ static portTASK_FUNCTION_PROTO(radioConfigTask, pvParameters) {
         default:
           break;
       }
-      vPortFree(msg.port);
+      free(msg.port);
     }
   }
 }
