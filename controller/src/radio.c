@@ -233,6 +233,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
     if (recvMsg && recvSize >= 1) {
       // Trust this to free recvMsg
       // TODO(cduck): Send to radio config thread instead
+      // receiveConfigPort(recvMsg, recvSize);
       switch (recvMsg[0]) {
         case ID_CONTROL_UNFREEZE: setGameMode(4); break;
         case ID_CONTROL_STOP: setGameMode(3); break;

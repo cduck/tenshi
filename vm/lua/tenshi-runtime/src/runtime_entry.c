@@ -409,10 +409,10 @@ int TenshiRunQuanta(TenshiRuntimeState s) {
     }
 
     if (ret == THREADING_EXITED) {
-      printf("Thread exited!\n");
+      // printf("Thread exited!\n");
       ActorDestroy(a);
     } else if (ret == THREADING_YIELD) {
-      printf("Thread yielded (blocked)!\n");
+      // printf("Thread yielded (blocked)!\n");
       ret = ActorSetBlocked(a);
       if (ret != LUA_OK) return ret;
     } else if (ret == THREADING_PREEMPT) {
