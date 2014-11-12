@@ -174,7 +174,7 @@ static const led_driver_pattern const driver_patterns[] = {
         .led_states = LED_BLUE | LED_GREEN,
         .num_ticks = 1,
       }, {
-        .led_states = LED_YELLOW | LED_BLUE,
+        /*.led_states = LED_YELLOW | LED_BLUE,*/
         .num_ticks = 1,
       }, {
         .led_states = LED_YELLOW,

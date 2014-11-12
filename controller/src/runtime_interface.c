@@ -187,9 +187,6 @@ int lua_get_radio_val(lua_State *L) {
 
   if (ubjson) {
     lua_pushlstring(L, ubjson, ubjsonLen);
-    free(ubjson);
-    ubjson = NULL;
-    ubjsonLen = 0;
   } else {
     lua_pushnil(L);
   }
