@@ -30,7 +30,7 @@
 #define SS_MAX_SENSORS_PER_BUS 32
 
 // Max 4 dependent on hardware
-#define SS_BUS_COUNT 2
+#define SS_BUS_COUNT 1
 
 
 void smartsensor_init();
