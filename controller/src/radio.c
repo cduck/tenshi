@@ -188,27 +188,99 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
   portTickType time = xTaskGetTickCount();
   portTickType lastTime = time;
 
+  int lastFakeTime = xTaskGetTickCount();
+
+  char * code =
+    /*"x = get_device('gp0-axes-1')\n"*/
+    "x = pieles.get_channel('axes-1')\n"
+    "pieles.__process_radio()\n"
+    /*"while true do\n"*/
+    /*"  print (inspect.inspect(1))\n"*/
+    /*"  print(__runtimeinternal.get_radio_val())\n"*/
+    /*"  print(inspect(inspect))\n"*/
+    /*"  print(inspect(ubjson.decode('[#U\000')))\n"*/
+
+    "  val = ubjson.decode(__runtimeinternal.get_radio_val())\n"
+    /*"  print(val)\n"*/
+    /*"  print(val._channel)\n"*/
+    "  print(val.axes[1])\n"
+    /*"  print(val.axes[2])\n"*/
+    /*"  print(val.axes[3])\n"*/
+    /*"  print(inspect.inspect(val))\n"*/
+    "  print(x.value)\n"
+    "  print(inspect.inspect(x))\n"
+    /*"  nil()\n"*/
+
+    /*"  print(inspect.inspect(ubjson.decode(__runtimeinternal.get_radio_val())))\n"*/
+
+    /*"  print(inspect(x))\n"*/
+    /*"  print(x.value)\n"*/
+    /*"end\n"*/
+    ;
+
+  runtimeRecieveCode(strdup(code), strlen(code));
+
   while (1) {
+    if (time - lastFakeTime > 120) {
+      lastFakeTime = xTaskGetTickCount();
+      char fakeMsg[] = {
+        123,
+         35,
+         85,
+         2,
+         85,
+         4,
+         97,
+         120,
+         101,
+         115,
+         91,
+         36,
+         85,
+         35,
+         85,
+         4,
+         0,
+         0,
+         0,
+         0,
+         85,
+         8,
+         95,
+         99,
+         104,
+         97,
+         110,
+         110,
+         101,
+         108,
+         83,
+         85,
+         3,
+         103,
+         112,
+         48
+      };
+      char * msgCopy = malloc(sizeof(fakeMsg));
+      memcpy(msgCopy, fakeMsg, sizeof(fakeMsg));
+      runtimeRecieveUbjson(msgCopy, sizeof(fakeMsg));
+    }
     recvMsg = NULL;
     recvSize = 0;
     NDL3_recv(target, NDL3_UBJSON_PORT, (void **) &recvMsg, &recvSize);
     // Send UBJSON to runtime
-    if (recvMsg && recvSize >= 1) {
+    if (recvMsg) {
       // Trust this to free recvMsg
       runtimeRecieveUbjson(recvMsg, recvSize);
-    } else {
-      free(recvMsg);
     }
 
     recvMsg = NULL;
     recvSize = 0;
     NDL3_recv(target, NDL3_FAST_PORT, (void **) &recvMsg, &recvSize);
     // Send fast UBJSON to runtime
-    if (recvMsg && recvSize >= 1) {
+    if (recvMsg) {
       // Trust this to free recvMsg
       runtimeRecieveUbjson(recvMsg, recvSize);
-    } else {
-      free(recvMsg);
     }
 
     recvMsg = NULL;
@@ -233,22 +305,22 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
     recvSize = 0;
     NDL3_recv(target, NDL3_CONFIG_PORT, (void **) &recvMsg, &recvSize);
     // Send code to runtime
-    if (recvMsg && recvSize >= 1) {
-      // Trust this to free recvMsg
-      // TODO(cduck): Send to radio config thread instead
-      // receiveConfigPort(recvMsg, recvSize);
-      switch (recvMsg[0]) {
-        case ID_CONTROL_UNFREEZE: setGameMode(4); break;
-        case ID_CONTROL_STOP: setGameMode(3); break;
-        case ID_CONTROL_UNPOWERED: setGameMode(1); break;
-        case ID_CONTROL_SET_AUTON: setGameMode(2); break;
-        case ID_CONTROL_SET_TELEOP: setGameMode(4); break;
-        default: break;
+    if (recvMsg) {
+      if (recvSize >= 1) {
+        // Trust this to free recvMsg
+        // TODO(cduck): Send to radio config thread instead
+        // receiveConfigPort(recvMsg, recvSize);
+        switch (recvMsg[0]) {
+          case ID_CONTROL_UNFREEZE: setGameMode(4); break;
+          case ID_CONTROL_STOP: setGameMode(3); break;
+          case ID_CONTROL_UNPOWERED: setGameMode(1); break;
+          case ID_CONTROL_SET_AUTON: setGameMode(2); break;
+          case ID_CONTROL_SET_TELEOP: setGameMode(4); break;
+          default: break;
+        }
       }
 
       printf("Got config data\n");
-      free(recvMsg);
-    } else {
       free(recvMsg);
     }
 

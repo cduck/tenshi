@@ -37,6 +37,7 @@
 #include "../trap_global.lc.h"      // NOLINT(build/include)
 #include "../triggers.lc.h"         // NOLINT(build/include)
 #include "../ubjson.lc.h"           // NOLINT(build/include)
+#include "../inspect.lc.h"          // NOLINT(build/include)
 #include "../units.lc.h"            // NOLINT(build/include)
 
 // Custom version of baselib with some functions omitted
@@ -145,6 +146,13 @@ static int tenshi_open_ubjson(lua_State *L) {
   return 1;
 }
 
+static int tenshi_open_inspect(lua_State *L) {
+  luaL_loadbuffer(L, inspect_lc, sizeof(inspect_lc), "inspect.lua");
+  lua_pcall(L, 0, LUA_MULTRET, 0);
+  return 1;
+}
+
+
 static int get_registry(lua_State *L) {
   lua_pushvalue(L, LUA_REGISTRYINDEX);
   return 1;
@@ -193,6 +201,7 @@ static const luaL_Reg tenshi_loadedlibs_phase2[] = {
   {"pieles", tenshi_open_pieles},
   {"game", tenshi_open_game},
   {"ubjson", tenshi_open_ubjson},
+  {"inspect", tenshi_open_inspect},
   {NULL, NULL}
 };
 
@@ -360,7 +369,7 @@ int LoadStudentcode(TenshiRuntimeState s, const char *data, size_t len,
   return LUA_OK;
 }
 
-void print_traceback(lua_State *L) {
+volatile void print_traceback(lua_State *L) {
   const char *msg = lua_tostring(L, -1);
   if (msg)  /* is error object a string? */
     luaL_traceback(L, L, msg, 0);  /* use standard traceback */
@@ -371,7 +380,7 @@ void print_traceback(lua_State *L) {
   }  /* else no error object, does nothing */
 
   const char *err_w_traceback = lua_tostring(L, -1);
-  printf("%s\n", err_w_traceback);
+  printf("traceback: \n%s\n", err_w_traceback);
 }
 
 int TenshiRunQuanta(TenshiRuntimeState s) {
@@ -409,10 +418,10 @@ int TenshiRunQuanta(TenshiRuntimeState s) {
     }
 
     if (ret == THREADING_EXITED) {
-      // printf("Thread exited!\n");
+      /*printf("Thread exited!\n");*/
       ActorDestroy(a);
     } else if (ret == THREADING_YIELD) {
-      // printf("Thread yielded (blocked)!\n");
+      /*printf("Thread yielded (blocked)!\n");*/
       ret = ActorSetBlocked(a);
       if (ret != LUA_OK) return ret;
     } else if (ret == THREADING_PREEMPT) {

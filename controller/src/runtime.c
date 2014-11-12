@@ -171,13 +171,14 @@ print(motor1)
 */
 
 const char studentCodeTemplate[] =
-  "print('Robot on.')\n"
+  //"print('Robot on.')\n"
   // "motor1=get_device('00000000008041DD')\n"
   // "print(motor1)\n"
   // "print(send)\n"
   // "send(motor1, 50)\n"
   // "print('Sent.')\n"
   "while true do\n"
+  /*"  print(__runtimeinternal.get_radio_val())\n"*/
   // "  recv({timeout=10})\n"
   // "  send(motor1, 50)\n"
   // "  print('While.')\n"

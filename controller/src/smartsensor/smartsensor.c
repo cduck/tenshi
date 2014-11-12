@@ -115,16 +115,16 @@ void smartsensor_init() {
   xSemaphoreGive(sensorArrLock);
 
   // Start tasks
-  xTaskCreate(smartSensorUpdateTask, (const char *)"SensorTX", 200, NULL,
-    tskIDLE_PRIORITY, NULL);
+  /*xTaskCreate(smartSensorUpdateTask, (const char *)"SensorTX", 200, NULL,*/
+    /*tskIDLE_PRIORITY, NULL);*/
   for (int i = 0; i < SS_BUS_COUNT; i++) {
     busState[i] = SS_BUS_ENUMERATION;
     xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512*4, (void*)i,
       tskIDLE_PRIORITY, NULL);
   }
   for (int i = 0; i < SS_BUS_COUNT; i++) {
-    xTaskCreate(smartSensorRX, (const char *)"SensorRX", 200, (void*)i,
-      tskIDLE_PRIORITY, NULL);
+    /*xTaskCreate(smartSensorRX, (const char *)"SensorRX", 200, (void*)i,*/
+      /*tskIDLE_PRIORITY, NULL);*/
   }
 }
 int ssIsActive() {

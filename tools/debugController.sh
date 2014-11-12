@@ -44,6 +44,7 @@ echo 'Type "quit" to exit debugger.'
 echo
 
 cd $TENSHI_DIR/tools/arm-toolchain/share/openocd/scripts/
+#../../../bin/openocd -f ../../../../stm32f4discovery.cfg &
 ../../../bin/openocd -f ../../../../stm32f4discovery.cfg 2>/dev/null &
 
 cd $TENSHI_DIR
