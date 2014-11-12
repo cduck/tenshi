@@ -95,9 +95,9 @@ portTASK_FUNCTION_PROTO(smartSensorUpdateTask, pvParameters);
 void smartsensor_init() {
   // Init busses
   smartsensor1_init();
-  smartsensor2_init();
-  smartsensor3_init();
-  smartsensor4_init();
+  // smartsensor2_init();
+  // smartsensor3_init();
+  // smartsensor4_init();
 
   busStateEvent = xEventGroupCreate();
 
@@ -119,7 +119,7 @@ void smartsensor_init() {
     tskIDLE_PRIORITY, NULL);
   for (int i = 0; i < SS_BUS_COUNT; i++) {
     busState[i] = SS_BUS_ENUMERATION;
-    xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512, (void*)i,
+    xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512*4, (void*)i,
       tskIDLE_PRIORITY, NULL);
   }
   for (int i = 0; i < SS_BUS_COUNT; i++) {
