@@ -37,7 +37,7 @@
 #include "../trap_global.lc.h"      // NOLINT(build/include)
 #include "../triggers.lc.h"         // NOLINT(build/include)
 #include "../ubjson.lc.h"           // NOLINT(build/include)
-#include "../inspect.lc.h"          // NOLINT(build/include)
+// #include "../inspect.lc.h"          // NOLINT(build/include)
 #include "../units.lc.h"            // NOLINT(build/include)
 
 // Custom version of baselib with some functions omitted
@@ -146,11 +146,11 @@ static int tenshi_open_ubjson(lua_State *L) {
   return 1;
 }
 
-static int tenshi_open_inspect(lua_State *L) {
+/*static int tenshi_open_inspect(lua_State *L) {
   luaL_loadbuffer(L, inspect_lc, sizeof(inspect_lc), "inspect.lua");
   lua_pcall(L, 0, LUA_MULTRET, 0);
   return 1;
-}
+}*/
 
 
 static int get_registry(lua_State *L) {
@@ -201,7 +201,7 @@ static const luaL_Reg tenshi_loadedlibs_phase2[] = {
   {"pieles", tenshi_open_pieles},
   {"game", tenshi_open_game},
   {"ubjson", tenshi_open_ubjson},
-  {"inspect", tenshi_open_inspect},
+  // {"inspect", tenshi_open_inspect},
   {NULL, NULL}
 };
 

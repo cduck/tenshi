@@ -61,6 +61,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters);
 BaseType_t radioInit() {
   radio_driver_init();
   radio_stdio_init();
+  radioConfigInit();
 
   radioQueue = xQueueCreate(100, sizeof(RadioMessage));
 
@@ -194,34 +195,35 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
     /*"x = get_device('gp0-axes-1')\n"*/
     "x = pieles.get_channel('axes-1')\n"
     "pieles.__process_radio()\n"
-    /*"while true do\n"*/
+    "while true do\n"
     /*"  print (inspect.inspect(1))\n"*/
     /*"  print(__runtimeinternal.get_radio_val())\n"*/
     /*"  print(inspect(inspect))\n"*/
     /*"  print(inspect(ubjson.decode('[#U\000')))\n"*/
 
-    "  val = ubjson.decode(__runtimeinternal.get_radio_val())\n"
+    //   "  val = ubjson.decode(__runtimeinternal.get_radio_val())\n"*/  //
+    //     "  print('abc')\n"
     /*"  print(val)\n"*/
     /*"  print(val._channel)\n"*/
-    "  print(val.axes[1])\n"
+    //    "  print(val.axes[1])\n"
     /*"  print(val.axes[2])\n"*/
     /*"  print(val.axes[3])\n"*/
     /*"  print(inspect.inspect(val))\n"*/
-    "  print(x.value)\n"
-    "  print(inspect.inspect(x))\n"
+    //     "  print(x.value)\n"
+    /*"  print(inspect.inspect(x))\n"*/
     /*"  nil()\n"*/
 
     /*"  print(inspect.inspect(ubjson.decode(__runtimeinternal.get_radio_val())))\n"*/
 
     /*"  print(inspect(x))\n"*/
     /*"  print(x.value)\n"*/
-    /*"end\n"*/
+    "end\n"
     ;
 
   runtimeRecieveCode(strdup(code), strlen(code));
 
   while (1) {
-    if (time - lastFakeTime > 120) {
+    /*if (time - lastFakeTime > 120) {
       lastFakeTime = xTaskGetTickCount();
       char fakeMsg[] = {
         123,
@@ -264,7 +266,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       char * msgCopy = malloc(sizeof(fakeMsg));
       memcpy(msgCopy, fakeMsg, sizeof(fakeMsg));
       runtimeRecieveUbjson(msgCopy, sizeof(fakeMsg));
-    }
+    }*/
     recvMsg = NULL;
     recvSize = 0;
     NDL3_recv(target, NDL3_UBJSON_PORT, (void **) &recvMsg, &recvSize);
@@ -310,18 +312,17 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
         // Trust this to free recvMsg
         // TODO(cduck): Send to radio config thread instead
         // receiveConfigPort(recvMsg, recvSize);
-        switch (recvMsg[0]) {
+        /*switch (recvMsg[0]) {
           case ID_CONTROL_UNFREEZE: setGameMode(4); break;
           case ID_CONTROL_STOP: setGameMode(3); break;
           case ID_CONTROL_UNPOWERED: setGameMode(1); break;
           case ID_CONTROL_SET_AUTON: setGameMode(2); break;
           case ID_CONTROL_SET_TELEOP: setGameMode(4); break;
           default: break;
-        }
+        }*/
+        receiveConfigPort(recvMsg, recvSize);
       }
-
-      printf("Got config data\n");
-      free(recvMsg);
+      // free(recvMsg);
     }
 
 

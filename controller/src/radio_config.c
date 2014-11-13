@@ -73,6 +73,7 @@ static portTASK_FUNCTION_PROTO(radioConfigTask, pvParameters) {
   while (1) {
     ConfigMessage msg;
     while (xQueueReceive(configMessageQueue, &msg, portMAX_DELAY) == pdTRUE) {
+      printf("Got config data!!!\n");
       switch (msg.port->id) {  // TODO(vdonato): Implement the rest
         case ID_START_VM:
           break;
@@ -100,6 +101,7 @@ static portTASK_FUNCTION_PROTO(radioConfigTask, pvParameters) {
             size_t size = sizeof(uint8_t) + sizeof(uint32_t) +
                           SMART_ID_LEN*numSensors;
             radioPushConfig(deviceList, size);
+            // printf("Device list: [%d,%d,%d]");
           }
           break;
         case ID_DEVICE_READ_DESCRIPTOR:
