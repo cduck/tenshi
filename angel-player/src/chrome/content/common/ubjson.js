@@ -478,6 +478,10 @@ function decode_inner(str, offset, depth) {
   var int_size = int_tag_size[c];
   if ( int_size !== undefined ) {
     return [undumpint(str, offset + 1, int_size, 'b'), offset + 1 + int_size];
+  } else if ( tag === 'd' ) {
+    return [undumpfloat(str, offset + 1, 'f', 'b'), offset + 1 + 4];
+  } else if ( tag === 'D' ) {
+    return [undumpfloat(str, offset + 1, 'd', 'b'), offset + 1 + 8];
   } else if ( c === 'C' ) {
     return [undumpint(str, offset + 1, 1, 'b'), offset + 2];
   } else if ( c === 'S' || c === 'H' ) {
@@ -525,8 +529,6 @@ function decode_inner(str, offset, depth) {
       var ls = decode_int(str, start_offset + 1, depth + 1, msg);
       length = ls[0];
       start_offset = ls[1];
-    } else {
-      start_offset = start_offset - 1;
     }
 
     var elt_offset = start_offset;
