@@ -359,6 +359,10 @@ local function decode_inner(str, offset, depth)
   local int_size = int_tag_size[c]
   if int_size ~= nil then
     return str:undumpint(offset + 1, int_size, 'b'), offset + 1 + int_size
+  elseif c == 'd' then
+    return str:undumpfloat(offset + 1, 'f', 'b'), offset + 1 + 4
+  elseif c == 'D' then
+    return str:undumpfloat(offset + 1, 'd', 'b'), offset + 1 + 8
   elseif c == 'C' then
     return str:undumpint(offset + 1, 1, 'b'), offset + 2
   elseif c == 'S' or c == 'H' then
@@ -405,8 +409,6 @@ local function decode_inner(str, offset, depth)
       msg = msg .. ' length at offset ' .. offset
       length, start_offset = decode_int(str, start_offset + 1,
                                         depth + 1, msg)
-    else
-      start_offset = start_offset - 1
     end
 
     local elt_offset = start_offset
@@ -420,11 +422,13 @@ local function decode_inner(str, offset, depth)
           end
         end
       else
+        local i = 1
         while str:sub(elt_offset, elt_offset) ~= ']' do
           val, elt_offset, skip = read_val(str, elt_offset, depth + 1)
           if not skip then
             out[i] = val
           end
+          i = i + 1
         end
       end
     else
