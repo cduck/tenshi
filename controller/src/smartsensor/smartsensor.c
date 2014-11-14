@@ -115,16 +115,16 @@ void smartsensor_init() {
   xSemaphoreGive(sensorArrLock);
 
   // Start tasks
-  /*xTaskCreate(smartSensorUpdateTask, (const char *)"SensorTX", 200, NULL,*/
-    /*tskIDLE_PRIORITY, NULL);*/
+  xTaskCreate(smartSensorUpdateTask, (const char *)"SensorTX", 200, NULL,
+    tskIDLE_PRIORITY, NULL);
   for (int i = 0; i < SS_BUS_COUNT; i++) {
     busState[i] = SS_BUS_ENUMERATION;
-    xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512, (void*)i,
+    xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512*3, (void*)i,
       tskIDLE_PRIORITY, NULL);
   }
   for (int i = 0; i < SS_BUS_COUNT; i++) {
-    /*xTaskCreate(smartSensorRX, (const char *)"SensorRX", 200, (void*)i,*/
-      /*tskIDLE_PRIORITY, NULL);*/
+    xTaskCreate(smartSensorRX, (const char *)"SensorRX", 200, (void*)i,
+      tskIDLE_PRIORITY, NULL);
   }
 }
 int ssIsActive() {
@@ -310,7 +310,8 @@ portTASK_FUNCTION_PROTO(smartSensorTX, pvParameters) {
         uint8_t button = button_driver_get_button_state(sensorIndex%2);
         sensor = sensorArr[sensorIndex];
         if (xSemaphoreTake(sensor->outLock, SENSOR_WAIT_TIME) == pdTRUE) {
-          if (checkOutgoingBytes(sensor, 1)) {
+          if ((sensor->outgoingBytes != NULL) &&
+              (sensor->outgoingLen >= 1)) {
             sensor->outgoingBytes[0] ^= ((0xFF*(!!button)) << 1);
             isOutgoing = 1;
             allocs = ss_send_active(bus, 0, sampleNumber, frameNumber,
