@@ -300,14 +300,8 @@ int main(int argc, char **argv) {
 
   init_malloc_lock();
 
-  led_driver_init();
-  button_driver_init();
-
   // Setup I2C
-  i2c1_init();
-
-  // Setup SmartSensors
-  smartsensor_init();
+  // i2c1_init();
 
   // Setup radio
   const int oldRadio = 0;
@@ -317,6 +311,12 @@ int main(int argc, char **argv) {
   } else {
     radioInit();
   }
+  
+  led_driver_init();
+  button_driver_init();
+
+  // Setup SmartSensors
+  smartsensor_init();
 
   runtimeInit();
 

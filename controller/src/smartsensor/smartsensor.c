@@ -119,7 +119,7 @@ void smartsensor_init() {
     /*tskIDLE_PRIORITY, NULL);*/
   for (int i = 0; i < SS_BUS_COUNT; i++) {
     busState[i] = SS_BUS_ENUMERATION;
-    xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512*4, (void*)i,
+    xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512, (void*)i,
       tskIDLE_PRIORITY, NULL);
   }
   for (int i = 0; i < SS_BUS_COUNT; i++) {
@@ -237,6 +237,21 @@ portTASK_FUNCTION_PROTO(smartSensorTX, pvParameters) {
   if (busNum == 0) {
     // Set all active flag (atomic)
     allActive = 1;
+    
+    // TODO(cduck): Don't print out device ids
+    /*for (int i = 0; i < numSensors; i++) {
+      SSState *sensor = sensorArr[i];
+      printf("Device type 0x%02x: %02x%02x%02x%02x%02x%02x%02x%02x\n",
+             sensor->primaryType,
+             sensor->id[0],
+             sensor->id[1],
+             sensor->id[2],
+             sensor->id[3],
+             sensor->id[4],
+             sensor->id[5],
+             sensor->id[6],
+             sensor->id[7]);
+    }*/
 
     // Display number of sensors
     led_driver_set_mode(PATTERN_JUST_RED);

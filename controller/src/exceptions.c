@@ -18,6 +18,8 @@
 // Various default exception/interrupt handlers
 
 #include "inc/led_driver.h"
+#include "inc/FreeRTOS.h"
+#include "inc/task.h"
 
 // Hard fault -- double fault or other unrecoverable error
 /* void HardFault_Handler(void) {
@@ -85,3 +87,11 @@ void NMI_Handler(void) {
   led_driver_panic();
   while (1) {}
 }
+
+
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName ) {
+  led_driver_panic();
+  while (1) {}
+}
+
+
