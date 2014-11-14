@@ -26,7 +26,7 @@
 
 
 #define MAX_PRINTS_PER_PERIOD 20
-#define TICKS_PER_PERIOD 1000
+#define TICKS_PER_PERIOD 5000
 #define PRINT_OVERFLOW_ERROR "Error: Too many prints.  %u dropped.\n"
 
 

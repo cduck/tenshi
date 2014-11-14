@@ -34,6 +34,9 @@
 
 #include "legacy_piemos_framing.h"   // NOLINT(build/include)
 
+// TODO(cduck): Don't do this
+#include "inc/smartsensor/ssutil.h"
+
 
 typedef struct {
   NDL3_port port;
@@ -189,84 +192,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
   portTickType time = xTaskGetTickCount();
   portTickType lastTime = time;
 
-  int lastFakeTime = xTaskGetTickCount();
-
-  char * code =
-    /*"x = get_device('gp0-axes-1')\n"*/
-    "x = pieles.get_channel('axes-1')\n"
-    "pieles.__process_radio()\n"
-    "while true do\n"
-    /*"  print (inspect.inspect(1))\n"*/
-    /*"  print(__runtimeinternal.get_radio_val())\n"*/
-    /*"  print(inspect(inspect))\n"*/
-    /*"  print(inspect(ubjson.decode('[#U\000')))\n"*/
-
-    //   "  val = ubjson.decode(__runtimeinternal.get_radio_val())\n"*/  //
-    //     "  print('abc')\n"
-    /*"  print(val)\n"*/
-    /*"  print(val._channel)\n"*/
-    //    "  print(val.axes[1])\n"
-    /*"  print(val.axes[2])\n"*/
-    /*"  print(val.axes[3])\n"*/
-    /*"  print(inspect.inspect(val))\n"*/
-    //     "  print(x.value)\n"
-    /*"  print(inspect.inspect(x))\n"*/
-    /*"  nil()\n"*/
-
-    /*"  print(inspect.inspect(ubjson.decode(__runtimeinternal.get_radio_val())))\n"*/
-
-    /*"  print(inspect(x))\n"*/
-    /*"  print(x.value)\n"*/
-    "end\n"
-    ;
-
-  runtimeRecieveCode(strdup(code), strlen(code));
-
   while (1) {
-    /*if (time - lastFakeTime > 120) {
-      lastFakeTime = xTaskGetTickCount();
-      char fakeMsg[] = {
-        123,
-         35,
-         85,
-         2,
-         85,
-         4,
-         97,
-         120,
-         101,
-         115,
-         91,
-         36,
-         85,
-         35,
-         85,
-         4,
-         0,
-         0,
-         0,
-         0,
-         85,
-         8,
-         95,
-         99,
-         104,
-         97,
-         110,
-         110,
-         101,
-         108,
-         83,
-         85,
-         3,
-         103,
-         112,
-         48
-      };
-      char * msgCopy = malloc(sizeof(fakeMsg));
-      memcpy(msgCopy, fakeMsg, sizeof(fakeMsg));
-      runtimeRecieveUbjson(msgCopy, sizeof(fakeMsg));
-    }*/
     recvMsg = NULL;
     recvSize = 0;
     NDL3_recv(target, NDL3_UBJSON_PORT, (void **) &recvMsg, &recvSize);
@@ -328,7 +254,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
 
     NDL3_error err = NDL3_pop_error(target);
     if (err && err != 5 && err != 7) {
-      printf("Radio error a%d\n", err);
+      // printf("Radio error a%d\n", err);
     }
 
 
@@ -341,7 +267,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
 
     err = NDL3_pop_error(target);
     if (err && err != 5 && err != 7) {
-      printf("Radio error b%d\n", err);
+      // printf("Radio error b%d\n", err);
     }
 
     uartRecvSize = sizeof(recXbeePacket_buf);
@@ -351,6 +277,25 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       recXbeePacket->length = __REV16(recXbeePacket->length);
       recXbeeHeader = (xbee_rx64_header*)&(recXbeePacket->payload);
       if (recXbeeHeader->xbee_api_type == XBEE_API_TYPE_RX64) {
+
+        // TODO(cduck): Don't do this
+        if (host_addr == 0 && ssIsActive()) {
+          // Print sensor IDs over radio
+          for (int i = 0; i < numSensors; i++) {
+            SSState *sensor = sensorArr[i];
+            printf("Device type 0x%02x: %02x%02x%02x%02x%02x%02x%02x%02x\n",
+                   sensor->primaryType,
+                   sensor->id[0],
+                   sensor->id[1],
+                   sensor->id[2],
+                   sensor->id[3],
+                   sensor->id[4],
+                   sensor->id[5],
+                   sensor->id[6],
+                   sensor->id[7]);
+          }
+        }
+
         host_addr = recXbeeHeader->xbee_src_addr;
         if (uartRecvSize >= prefixLen && recXbeeHeader->data[0] == NDL3_IDENT) {
           NDL3_L2_push(target, (uint8_t*)recXbeeHeader->data+1,
@@ -361,7 +306,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
 
     err = NDL3_pop_error(target);
     if (err && err != 5 && err != 7) {
-      printf("Radio error c%d\n", err);
+      // printf("Radio error c%d\n", err);
     }
 
     if (host_addr != 0 && uart_serial_packets_waiting(radio_driver) <= 1) {
@@ -374,7 +319,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
 
     err = NDL3_pop_error(target);
     if (err && err != 5 && err != 7) {
-      printf("Radio error d%d\n", err);
+      // printf("Radio error d%d\n", err);
     }
 
     time = xTaskGetTickCount();
