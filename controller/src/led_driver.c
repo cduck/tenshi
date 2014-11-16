@@ -244,6 +244,19 @@ void led_driver_panic(void) {
   GPIO_BANK(PINDEF_YELLOW_LED)->BSRRL =
     (1 << GPIO_PIN(PINDEF_YELLOW_LED));
 }
+void led_driver_panic2(void) {
+  led_driver_init_hw();
+
+  // Turn on all the LEDs
+  GPIO_BANK(PINDEF_RED_LED)->BSRRL =
+    (1 << GPIO_PIN(PINDEF_RED_LED));
+  GPIO_BANK(PINDEF_GREEN_LED)->BSRRL =
+    (1 << GPIO_PIN(PINDEF_GREEN_LED));
+  GPIO_BANK(PINDEF_BLUE_LED)->BSRRL =
+    (0 << GPIO_PIN(PINDEF_BLUE_LED));
+  GPIO_BANK(PINDEF_YELLOW_LED)->BSRRL =
+    (1 << GPIO_PIN(PINDEF_YELLOW_LED));
+}
 
 static portTASK_FUNCTION_PROTO(led_driver_task, pvParameters) {
   (void) pvParameters;
