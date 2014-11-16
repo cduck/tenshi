@@ -23,6 +23,7 @@
 // Configures all the LEDs and turns them all on. Very basic, so should never
 // crash. Used to indicate hard errors like failed oscillator init.
 extern void led_driver_panic(void);
+extern void led_driver_panic2(void);
 
 // Initializes the LED driver. Defaults to pattern 0. Patterns are defined in
 // the .c file.

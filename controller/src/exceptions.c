@@ -90,7 +90,7 @@ void NMI_Handler(void) {
 
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName ) {
-  led_driver_panic();
+  led_driver_panic2();
   while (1) {}
 }
 
