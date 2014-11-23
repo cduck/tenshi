@@ -24,6 +24,7 @@
 #include "inc/queue.h"
 #include "inc/smartsensor/smartsensor.h"
 #include "inc/smartsensor/ssutil.h"
+#include "inc/smartsensor/sstype.h"
 #include "inc/runtime.h"
 
 size_t data_size = sizeof(uint8_t) + sizeof(TickType_t) + sizeof(uint32_t);
@@ -104,7 +105,7 @@ config_port *getValueUpdate() {
       port->data.device_value_update.devices[i].did = temp;
       port->data.device_value_update.devices[i].count =  sensorArr[i]->channelsNum;
       for (int k = 0; k < sensorArr[i]->channelsNum; k++){ 
-                 port->data.device_value_update.devices[i].values[k].value = ss_get_generic_value(sensorArr[i]->channels[k]) ;
+                 port->data.device_value_update.devices[i].values[k].value = ss_get_generic_val(sensorArr[i]->channels[k]) ;
       }
   }}
   else {

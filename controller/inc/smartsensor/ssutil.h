@@ -161,6 +161,9 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len);
 // Does both of the above functions
 int ss_update_descriptor(SSState *sensor);
 
+// Takes a pointer location (pre-malloced) and fills it with sensor state descriptor
+void ss_make_descriptor(SSState *sensor, uint8_t *p);
+
 
 // Helper functions for smartsensor.c
 int ss_uart_serial_send_and_finish_data(uart_serial_module *module,

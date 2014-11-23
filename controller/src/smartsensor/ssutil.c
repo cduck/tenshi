@@ -94,7 +94,6 @@ uint8_t *ss_read_descriptor(SSState *sensor, uint32_t *readLen) {
               SENSOR_REPLY_TIMEOUT);
   if (ret) return NULL;
   if (recLen < prefixLen+3 || recData[1] != SS_PACKET_DESCRIPTOR) {
-    free(recData);
     return NULL;
   }
   // At least two bytes decoded, at most 3 if extra data was recieved.
