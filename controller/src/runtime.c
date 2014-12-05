@@ -172,7 +172,7 @@ print(motor1)
 */
 
 const char studentCodeTemplate[] =
-  //"print('Robot on.')\n"
+  // "print('Robot on.')\n"
   // "motor1=get_device('00000000008041DD')\n"
   // "print(motor1)\n"
   // "print(send)\n"

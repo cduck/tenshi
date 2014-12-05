@@ -17,7 +17,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdio.h>
 
 #include <ndl3.h>
 
@@ -278,7 +277,6 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       recXbeePacket->length = __REV16(recXbeePacket->length);
       recXbeeHeader = (xbee_rx64_header*)&(recXbeePacket->payload);
       if (recXbeeHeader->xbee_api_type == XBEE_API_TYPE_RX64) {
-
         // TODO(cduck): Don't do this
         if (host_addr == 0 && ssIsActive()) {
           // Print sensor IDs over radio

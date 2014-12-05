@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
   // i2c1_init();
 
   radioInit();
-  
+
   led_driver_init();
   button_driver_init();
 

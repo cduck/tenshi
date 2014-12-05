@@ -117,7 +117,7 @@ void smartsensor_init() {
 
   // Start tasks
   xTaskCreate(smartSensorUpdateTask, (const char *)"SensorTX", 400, NULL,
-   tskIDLE_PRIORITY, NULL);
+      tskIDLE_PRIORITY, NULL);
   for (int i = 0; i < SS_BUS_COUNT; i++) {
     busState[i] = SS_BUS_ENUMERATION;
     xTaskCreate(smartSensorTX, (const char *)"SensorTX", 512*3, (void*)i,
@@ -238,7 +238,7 @@ portTASK_FUNCTION_PROTO(smartSensorTX, pvParameters) {
   if (busNum == 0) {
     // Set all active flag (atomic)
     allActive = 1;
-    
+
     // TODO(cduck): Don't print out device ids
     /*for (int i = 0; i < numSensors; i++) {
       SSState *sensor = sensorArr[i];
