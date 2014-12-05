@@ -236,12 +236,12 @@ static portTASK_FUNCTION_PROTO(runtimeTask, pvParameters) {
       } else {
         switch (msg.type) {
           case RuntimeMessageUbjson:
-            free(lastUbjson);
+            debug_free(lastUbjson);
             lastUbjson = msg.info;
             lastUbjsonLen = msg.infoLen;
             break;
           case RuntimeMessageNewCode:
-            free(studentCode);
+            debug_free(studentCode);
             studentCode = msg.info;
             studentCodeLen = msg.infoLen;
 
@@ -266,7 +266,7 @@ static portTASK_FUNCTION_PROTO(runtimeTask, pvParameters) {
             setGameMode(RuntimeModeDisabled);
             break;
           default:
-            free(msg.info);
+            debug_free(msg.info);
             break;
         }
       }

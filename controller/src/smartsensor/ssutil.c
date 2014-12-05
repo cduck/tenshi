@@ -95,7 +95,7 @@ uint8_t *ss_read_descriptor(SSState *sensor, uint32_t *readLen) {
               SENSOR_REPLY_TIMEOUT);
   if (ret) return NULL;
   if (recLen < prefixLen+3 || recData[1] != SS_PACKET_DESCRIPTOR) {
-    free(recData);
+    debug_free(recData);
     return NULL;
   }
   // At least two bytes decoded, at most 3 if extra data was recieved.
@@ -112,7 +112,7 @@ uint8_t *ss_read_descriptor(SSState *sensor, uint32_t *readLen) {
     int success = ss_send_maintenance_to_sensor(sensor, SS_PACKET_DESCRIPTOR,
                     request, requestLen);  // Request descriptor bytes
     if (!success) {
-      free(allData);
+      debug_free(allData);
       return NULL;
     }
     recLen = sizeof(recData);
@@ -120,7 +120,7 @@ uint8_t *ss_read_descriptor(SSState *sensor, uint32_t *readLen) {
                 SENSOR_REPLY_TIMEOUT);
     if (ret || recLen < prefixLen+2  // Minimum 1 byte of descriptor data
         || recData[1] != SS_PACKET_DESCRIPTOR) {
-      free(allData);
+      debug_free(allData);
       return NULL;
     }
     if (partLen + (recLen-prefixLen-1) > allLen)  // If too much data recieved
@@ -150,7 +150,7 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
   sensor->descriptionLen = data[0];
   ++data;
   if (data + sensor->descriptionLen > end) return 0;
-  free(sensor->description);
+  debug_free(sensor->description);
   sensor->description = debug_alloc(sensor->descriptionLen);
   if (!sensor->description) return 0;
   memcpy(sensor->description, data, sensor->descriptionLen);
@@ -166,14 +166,14 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
   if (data + 1 > end) return 0;
   uint8_t channelsNum = data[0];
   ++data;
-  free(sensor->channels);
+  debug_free(sensor->channels);
   sensor->channels = debug_alloc(sensor->channelsNum * sizeof(SSChannel*));
   if (!sensor->channels) return 0;
 
   sensor->outgoingLen = 0;
   sensor->incomingLen = 0;
-  free(sensor->outgoingBytes);
-  free(sensor->incomingBytes);
+  debug_free(sensor->outgoingBytes);
+  debug_free(sensor->incomingBytes);
   sensor->outgoingBytes = NULL;
   sensor->incomingBytes = NULL;
 
@@ -190,7 +190,7 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
     data += 2;
     channel->description = debug_alloc(channel->descriptionLen);
     if (!channel->description) {
-      free(channel);
+      debug_free(channel);
       return 0;
     }
     memcpy(channel->description, data, channel->descriptionLen);
@@ -202,8 +202,8 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
     channel->additionalLen = descriptorLen - 3 - channel->descriptionLen;
     channel->additional = debug_alloc(channel->additionalLen);
     if (!channel->additional) {
-      free(channel->description);
-      free(channel);
+      debug_free(channel->description);
+      debug_free(channel);
       return 0;
     }
     memcpy(channel->additional, data, channel->additionalLen);
@@ -268,7 +268,7 @@ int ss_update_descriptor(SSState *sensor) {
   if (data && len > 0) {
     ret = ss_interpret_descriptor(sensor, data, len);
   }
-  free(data);
+  debug_free(data);
   return ret;
 }
 
@@ -313,7 +313,7 @@ size_t ss_add_sensor(SSState *sensor) {
     SSState **newPtr = debug_alloc((numSensorsAlloc+numAllocAtOnce) *
                                    sizeof(SSState*));
     memcpy(newPtr, sensorArr, numSensorsAlloc*sizeof(SSState*));
-    free(sensorArr);
+    debug_free(sensorArr);
     sensorArr = newPtr;
     numSensorsAlloc += numAllocAtOnce;
   }
@@ -332,7 +332,7 @@ size_t ss_add_sensors(KnownIDs *sensors) {
     SSState **newPtr = debug_alloc((numSensors+sensors->len) *
                                    sizeof(SSState*));
     memcpy(newPtr, sensorArr, numSensors*sizeof(SSState*));
-    free(sensorArr);
+    debug_free(sensorArr);
     sensorArr = newPtr;
     numSensorsAlloc = numSensors+sensors->len;
   }
@@ -441,7 +441,7 @@ int ss_send_maintenance(uart_serial_module *module, uint8_t type,
   cobs_encode(data_cobs+3, data, len);
 
   int r = ss_uart_serial_send_and_finish_data(module, data_cobs, len+4);
-  free(data_cobs);
+  debug_free(data_cobs);
   return r;
 }
 int ss_send_maintenance_to_sensor(SSState *sensor, uint8_t type,
@@ -451,7 +451,7 @@ int ss_send_maintenance_to_sensor(SSState *sensor, uint8_t type,
   memcpy(buffer+SMART_ID_LEN, data, len);
   int ret = ss_send_maintenance(ssBusses[sensor->busNum], type, buffer,
     SMART_ID_LEN+len);
-  free(buffer);
+  debug_free(buffer);
   return ret;
 }
 int ss_all_send_maintenance(uint8_t type, const uint8_t *data, uint8_t len) {
@@ -466,7 +466,7 @@ int ss_all_send_maintenance(uint8_t type, const uint8_t *data, uint8_t len) {
   cobs_encode(data_cobs+3, data, len);
 
   int r = ss_all_uart_serial_send_and_finish_data(data_cobs, len+4);
-  free(data_cobs);
+  debug_free(data_cobs);
   return r;
 }
 int ss_send_ping_pong(SSState *sensor, const uint8_t *data, uint8_t len) {
@@ -482,7 +482,7 @@ int ss_send_ping_pong(SSState *sensor, const uint8_t *data, uint8_t len) {
 
   int r = ss_send_maintenance(ssBusses[sensor->busNum], 0xFE, temp,
     len+SMART_ID_LEN);
-  free(temp);
+  debug_free(temp);
   return r;
 }
 
@@ -573,7 +573,7 @@ void ss_wait_until_done(uart_serial_module *module,
         UART_SERIAL_SEND_ERROR)) {}
 }
 void ss_send_finish(uart_serial_module *module, transmit_allocations allocs) {
-  if (allocs.data) free(allocs.data);
+  if (allocs.data) debug_free(allocs.data);
   if (allocs.txn) uart_serial_send_finish(module, allocs.txn);
 }
 

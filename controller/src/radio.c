@@ -162,7 +162,7 @@ void *ndAlloc(NDL3_size size, void * userdata) {
 }
 void ndFree(void * to_free, void * userdata) {
   (void) userdata;
-  free(to_free);
+  debug_free(to_free);
 }
 
 
@@ -216,7 +216,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
     NDL3_recv(target, NDL3_STRING_PORT, (void **) &recvMsg, &recvSize);
     // Do stuff with recieved message
 
-    free(recvMsg);
+    debug_free(recvMsg);
 
     recvMsg = NULL;
     recvSize = 0;
@@ -226,7 +226,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
       // Trust this to free recvMsg
       runtimeRecieveCode(recvMsg, recvSize);
     } else {
-      free(recvMsg);
+      debug_free(recvMsg);
     }
 
     recvMsg = NULL;
@@ -248,7 +248,7 @@ static portTASK_FUNCTION_PROTO(radioNewTask, pvParameters) {
         }*/
         receiveConfigPort(recvMsg, recvSize);
       }
-      // free(recvMsg);
+      // debug_free(recvMsg);
     }
 
 

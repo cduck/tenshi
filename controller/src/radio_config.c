@@ -112,7 +112,7 @@ static portTASK_FUNCTION_PROTO(radioConfigTask, pvParameters) {
         default:
           break;
       }
-      free(msg.port);
+      debug_free(msg.port);
     }
   }
 }

@@ -208,7 +208,7 @@ portTASK_FUNCTION_PROTO(smartSensorTX, pvParameters) {
       ss_select_delay();
     }
 
-    free(enumIDs.arr);
+    debug_free(enumIDs.arr);
 
     busState[busNum] = SS_BUS_ACTIVE;
   }
@@ -399,7 +399,7 @@ portTASK_FUNCTION_PROTO(smartSensorRX, pvParameters) {
             }
           }
 
-          free(data_decode);
+          debug_free(data_decode);
         }
       }
     }
