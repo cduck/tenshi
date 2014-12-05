@@ -94,7 +94,10 @@ void *pool_alloc_block(pool_alloc_t pool) {
     if (!pool) return NULL;
 
     // No free blocks
-    if (!pool->alloc_state) return NULL;
+    /*if (!pool->alloc_state) return NULL;*/
+    if (!pool->alloc_state) {
+      while (1) {}
+    }
 
     // Should assemble into rbit, clz
     int idx = __builtin_ctz(pool->alloc_state);
