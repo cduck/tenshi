@@ -25,6 +25,7 @@
 
 #define TYPE_PING_PONG    0xFE
 #define TYPE_SLAVE_CONFIG 0xD0
+#define TYPE_SLAVE_DESCRIPTOR 0xD1
 
 uint8_t compare_ID(uint8_t *data);
 
@@ -33,13 +34,20 @@ uint8_t compare_ID(uint8_t *data);
 void maintenancePacket(uint8_t type, uint8_t *data, uint8_t len,
   uint8_t *outData, uint8_t *outLen) {
   switch (type) {
-    case TYPE_PING_PONG: maintenancePingPong(data, len, outData, outLen); break;
-    case TYPE_SLAVE_CONFIG: maintenanceSlaveConfig(data, len, outData, outLen);
+    case TYPE_PING_PONG:
+      maintenancePingPong(data, len, outData, outLen);
+      break;
+    case TYPE_SLAVE_CONFIG:
+      maintenanceSlaveConfig(data, len, outData, outLen);
+      break;
+    case TYPE_SLAVE_DESCRIPTOR:
+      maintenanceDescriptor(data, len, outData, outLen);
       break;
     default: break;
     // TODO(cduck): Add more maintenance packets
   }
 }
+
 void maintenancePingPong(uint8_t *data, uint8_t len,
   uint8_t *outData, uint8_t *outLen) {
   if (len < SMART_ID_LEN) return;  // Bad packet
@@ -52,6 +60,7 @@ void maintenancePingPong(uint8_t *data, uint8_t len,
     return;
   }
 }
+
 void maintenanceSlaveConfig(uint8_t *data, uint8_t len,
   uint8_t *outData, uint8_t *outLen) {
   if (len < SMART_ID_LEN) return;  // Bad packet
