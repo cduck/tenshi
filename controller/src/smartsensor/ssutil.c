@@ -22,6 +22,7 @@
 #include "inc/smartsensor/sstype.h"
 #include "inc/smartsensor/cobs.h"
 #include "inc/smartsensor/crc.h"
+#include "inc/debug_alloc.h"
 
 #include "inc/driver_glue.h"
 #include "inc/uart_serial_driver.h"
@@ -101,7 +102,7 @@ uint8_t *ss_read_descriptor(SSState *sensor, uint32_t *readLen) {
   cobs_decode(temp, recData+prefixLen, 4);
 
   allLen = temp[0] + temp[1]*0x100;  // Little endian
-  allData = malloc(allLen);
+  allData = debug_alloc(allLen);
 
   while (partLen < allLen) {
     request[0] = partLen & 0xFF;
@@ -150,7 +151,7 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
   ++data;
   if (data + sensor->descriptionLen > end) return 0;
   free(sensor->description);
-  sensor->description = malloc(sensor->descriptionLen);
+  sensor->description = debug_alloc(sensor->descriptionLen);
   if (!sensor->description) return 0;
   memcpy(sensor->description, data, sensor->descriptionLen);
   data += sensor->descriptionLen;
@@ -166,7 +167,7 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
   uint8_t channelsNum = data[0];
   ++data;
   free(sensor->channels);
-  sensor->channels = malloc(sensor->channelsNum * sizeof(SSChannel*));
+  sensor->channels = debug_alloc(sensor->channelsNum * sizeof(SSChannel*));
   if (!sensor->channels) return 0;
 
   sensor->outgoingLen = 0;
@@ -181,13 +182,13 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
     if (data + 3 > end) return 0;
     if (data[1] + 3 > data[0]) return 0;
     if (data + data[0] > end) return 0;
-    SSChannel *channel = malloc(sizeof(SSChannel));
+    SSChannel *channel = debug_alloc(sizeof(SSChannel));
     if (!channel) return 0;
 
     channel->descriptionLen = data[1];
     uint8_t descriptorLen = data[0];
     data += 2;
-    channel->description = malloc(channel->descriptionLen);
+    channel->description = debug_alloc(channel->descriptionLen);
     if (!channel->description) {
       free(channel);
       return 0;
@@ -199,7 +200,7 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
     ++data;
 
     channel->additionalLen = descriptorLen - 3 - channel->descriptionLen;
-    channel->additional = malloc(channel->additionalLen);
+    channel->additional = debug_alloc(channel->additionalLen);
     if (!channel->additional) {
       free(channel->description);
       free(channel);
@@ -231,10 +232,10 @@ int ss_interpret_descriptor(SSState *sensor, uint8_t *data, uint32_t len) {
   }
 
   if (sensor->outgoingLen) {
-    sensor->outgoingBytes = malloc(sensor->outgoingLen);
+    sensor->outgoingBytes = debug_alloc(sensor->outgoingLen);
   }
   if (sensor->incomingLen) {
-    sensor->incomingBytes = malloc(sensor->incomingLen);
+    sensor->incomingBytes = debug_alloc(sensor->incomingLen);
   }
   if (sensor->outgoingBytes) {
     memset(sensor->outgoingBytes, 0, sensor->outgoingLen);
@@ -276,7 +277,7 @@ int ss_update_descriptor(SSState *sensor) {
 
 // Helper functions for smartsensor.c
 SSState *ss_init_sensor(uint8_t id[SMART_ID_LEN], uint8_t busNum) {
-  SSState *s = malloc(sizeof(SSState));
+  SSState *s = debug_alloc(sizeof(SSState));
   s->busNum = busNum;
 
   s->outLock = xSemaphoreCreateBinary();
@@ -309,7 +310,7 @@ size_t ss_add_sensor(SSState *sensor) {
 
   const int numAllocAtOnce = 10;
   if (numSensorsAlloc <= numSensors) {
-    SSState **newPtr = malloc((numSensorsAlloc+numAllocAtOnce) *
+    SSState **newPtr = debug_alloc((numSensorsAlloc+numAllocAtOnce) *
                                    sizeof(SSState*));
     memcpy(newPtr, sensorArr, numSensorsAlloc*sizeof(SSState*));
     free(sensorArr);
@@ -328,7 +329,7 @@ size_t ss_add_sensors(KnownIDs *sensors) {
   if (xSemaphoreTake(sensorArrLock, SENSOR_WAIT_TIME) != pdTRUE) return -1;
 
   if (numSensorsAlloc < numSensors+sensors->len) {
-    SSState **newPtr = malloc((numSensors+sensors->len) *
+    SSState **newPtr = debug_alloc((numSensors+sensors->len) *
                                    sizeof(SSState*));
     memcpy(newPtr, sensorArr, numSensors*sizeof(SSState*));
     free(sensorArr);
@@ -431,7 +432,7 @@ int ss_send_maintenance(uart_serial_module *module, uint8_t type,
   const uint8_t *data, uint8_t len) {
   if (len > 255-4)return 0;
 
-  uint8_t *data_cobs = (uint8_t*)malloc(4+len);
+  uint8_t *data_cobs = (uint8_t*)debug_alloc(4+len);
   // Four extra for 0x00, type, len, and extra COBS byte.
 
   data_cobs[0] = 0x00;
@@ -445,7 +446,7 @@ int ss_send_maintenance(uart_serial_module *module, uint8_t type,
 }
 int ss_send_maintenance_to_sensor(SSState *sensor, uint8_t type,
   const uint8_t *data, uint8_t len) {
-  uint8_t *buffer = malloc(SMART_ID_LEN+len);
+  uint8_t *buffer = debug_alloc(SMART_ID_LEN+len);
   memcpy(buffer, sensor->id, SMART_ID_LEN);
   memcpy(buffer+SMART_ID_LEN, data, len);
   int ret = ss_send_maintenance(ssBusses[sensor->busNum], type, buffer,
@@ -456,7 +457,7 @@ int ss_send_maintenance_to_sensor(SSState *sensor, uint8_t type,
 int ss_all_send_maintenance(uint8_t type, const uint8_t *data, uint8_t len) {
   if (len > 255-4)return 0;
 
-  uint8_t *data_cobs = (uint8_t*)malloc(4+len);
+  uint8_t *data_cobs = (uint8_t*)debug_alloc(4+len);
   // Four extra for 0x00, type, len, and extra COBS byte.
 
   data_cobs[0] = 0x00;
@@ -471,7 +472,7 @@ int ss_all_send_maintenance(uint8_t type, const uint8_t *data, uint8_t len) {
 int ss_send_ping_pong(SSState *sensor, const uint8_t *data, uint8_t len) {
   if (len > 255-4-SMART_ID_LEN)return 0;
 
-  uint8_t *temp = (uint8_t*)malloc(len+SMART_ID_LEN);
+  uint8_t *temp = (uint8_t*)debug_alloc(len+SMART_ID_LEN);
   for (uint8_t i = 0; i < SMART_ID_LEN; i++) {
     temp[i] = sensor->id[i];
   }
@@ -552,7 +553,7 @@ transmit_allocations ss_send_active(uart_serial_module *module, uint8_t inband,
   if (len > 12)return allocs;  // Too long for active packet
   if ((frame & 7) == 0)return allocs;  // Frame can never be zero
 
-  uint8_t *data_cobs = (uint8_t*)malloc(4+len);
+  uint8_t *data_cobs = (uint8_t*)debug_alloc(4+len);
   // Four extra for 0x00, sample/frame, len, and extra COBS byte.
 
   data_cobs[0] = 0x00;

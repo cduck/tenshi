@@ -33,6 +33,7 @@
 #include "inc/led_driver.h"
 #include "inc/button_driver.h"
 #include "inc/radio.h"
+#include "inc/debug_alloc.h"
 
 #define LUA_REGISTER(FUNC) lua_register(L, #FUNC, lua_ ## FUNC)
 #define LUA_REG(FUNC) {.name = #FUNC, .func = lua_ ## FUNC}
@@ -126,8 +127,7 @@ int lua_get_device(lua_State *L) {
   }
 
   if (channel) {
-    SSChannel *copy = channel;  // malloc(sizeof(SSChannel));
-    // memcpy(copy, channel, sizeof(SSChannel));
+    SSChannel *copy = channel;
     lua_pushlightuserdata(L, copy);
   } else {
     lua_pushnil(L);
@@ -183,9 +183,11 @@ int lua_set_radio_val(lua_State *L) {
   size_t ubjsonLen = 0;
   char *ubjson = lua_tolstring(L, 2, &ubjsonLen);
 
-  char *ubjsonMalloc = malloc(ubjsonLen);
-  memcpy(ubjsonMalloc, ubjson, ubjsonLen);
-  radioPushUbjson(ubjsonMalloc, ubjsonLen);
+  char *ubjsonMalloc = debug_alloc(ubjsonLen);
+  if (ubjsonMalloc) {
+    memcpy(ubjsonMalloc, ubjson, ubjsonLen);
+    radioPushUbjson(ubjsonMalloc, ubjsonLen);
+  }
 
   lua_pop(L, 2);
   return 0;

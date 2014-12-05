@@ -31,6 +31,7 @@
 #include "inc/led_driver.h"
 #include "inc/xbee_framing.h"
 #include "inc/radio_stdio.h"
+#include "inc/debug_alloc.h"
 
 #include "legacy_piemos_framing.h"   // NOLINT(build/include)
 
@@ -156,7 +157,7 @@ void radio_send_xbee(uint8_t *data, size_t len) {
 }
 void *ndAlloc(NDL3_size size, void * userdata) {
   (void) userdata;
-  void *ret = malloc(size);
+  void *ret = debug_alloc(size);
   while (!ret) {}
   return ret;
 }

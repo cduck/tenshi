@@ -299,6 +299,7 @@ int main(int argc, char **argv) {
   (void) argv;
 
   init_malloc_lock();
+  debug_alloc_init();
 
   // Setup I2C
   // i2c1_init();

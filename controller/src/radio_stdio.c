@@ -24,6 +24,8 @@
 
 #include "inc/radio.h"
 
+#include "inc/debug_alloc.h"
+
 
 #define MAX_PRINTS_PER_PERIOD 20
 #define TICKS_PER_PERIOD 5000
@@ -44,14 +46,14 @@ ssize_t radio_write(struct _reent *r, int fd, const char *ptr, size_t len) {
   }
   if (count < MAX_PRINTS_PER_PERIOD) {
     if (oldCount > MAX_PRINTS_PER_PERIOD) {
-      char *str = malloc(len + sizeof(PRINT_OVERFLOW_ERROR) + 12);
+      char *str = debug_alloc(len + sizeof(PRINT_OVERFLOW_ERROR) + 12);
       int c = snprintf(str, sizeof(PRINT_OVERFLOW_ERROR) + 12,
                        PRINT_OVERFLOW_ERROR, oldCount-MAX_PRINTS_PER_PERIOD);
       if (c < 0) c = 0;
       memcpy(str+c, ptr, len);
       radioPushString(str, len+c);
     } else {
-      char *str = malloc(len);
+      char *str = debug_alloc(len);
       memcpy(str, ptr, len);
       radioPushString(str, len);
     }

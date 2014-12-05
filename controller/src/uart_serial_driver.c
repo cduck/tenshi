@@ -26,6 +26,7 @@
 #include "inc/queue.h"
 #include "inc/semphr.h"
 #include "inc/task.h"
+#include "inc/debug_alloc.h"
 
 #define UART_RX_BUFFER_SIZE   256
 #define UART_QUEUE_SIZE 8
@@ -270,9 +271,9 @@ uart_serial_module *uart_serial_init_module(int uart_num,
 
   // Allocate a packet pool for RX and TX
   module->txPacketPool = pool_alloc_create(sizeof(uart_txn), UART_QUEUE_SIZE,
-    malloc);
+    debug_alloc);
   module->rxPacketPool = pool_alloc_create(sizeof(uart_txn), UART_QUEUE_SIZE,
-    malloc);
+    debug_alloc);
 
   // Preallocate an RX transaction object
   uart_txn *rxTxn = pool_alloc_block(module->rxPacketPool);
@@ -307,12 +308,14 @@ void *uart_serial_send_data(uart_serial_module *module, const uint8_t *data,
   uart_txn *txn = pool_alloc_block(
     ((uart_serial_module_private *)module)->txPacketPool);
 
-  memcpy(txn->data, data, len);
-  txn->len = len;
-  txn->status = UART_SERIAL_SEND_QUEUED;
+  if (txn != NULL) {
+    memcpy(txn->data, data, len);
+    txn->len = len;
+    txn->status = UART_SERIAL_SEND_QUEUED;
 
-  xQueueSendToBack(((uart_serial_module_private *)module)->txQueue, &txn,
-    portMAX_DELAY);
+    xQueueSendToBack(((uart_serial_module_private *)module)->txQueue, &txn,
+      portMAX_DELAY);
+  }
 
   return txn;
 }
@@ -357,6 +360,7 @@ int uart_serial_receive_packet(uart_serial_module *module,
   return uart_serial_receive_packet_timeout(module, buf, len,
     shouldBlock ? portMAX_DELAY : 0);
 }
+
 int uart_serial_receive_packet_timeout(uart_serial_module *module,
   uint8_t *buf, size_t *len, TickType_t timeout) {
   uart_txn *txn;

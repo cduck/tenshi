@@ -40,6 +40,7 @@
 #include "inc/queue.h"
 #include "inc/smartsensor/smartsensor.h"
 #include "inc/smartsensor/ssutil.h"
+#include "inc/debug_alloc.h"
 
 typedef struct {
   RuntimeMessageType type;
@@ -204,7 +205,7 @@ static portTASK_FUNCTION_PROTO(runtimeTask, pvParameters) {
   int ret = RUNTIME_OK, firstErr = RUNTIME_OK;
   TenshiRuntimeState s = NULL;
   TenshiActorState a = NULL;
-  char *studentCode = malloc(sizeof(studentCodeTemplate));
+  char *studentCode = debug_alloc(sizeof(studentCodeTemplate));
   memcpy(studentCode, studentCodeTemplate, sizeof(studentCodeTemplate));
   size_t studentCodeLen = sizeof(studentCodeTemplate)-1;
 

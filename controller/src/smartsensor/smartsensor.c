@@ -31,6 +31,7 @@
 #include "inc/smartsensor/ssutil.h"
 #include "inc/smartsensor/enumeration.h"
 #include "inc/smartsensor/cobs.h"
+#include "inc/debug_alloc.h"
 
 #include "inc/button_driver.h"
 #include "inc/driver_glue.h"
@@ -110,7 +111,7 @@ void smartsensor_init() {
   sensorArrLock = xSemaphoreCreateBinary();
 
   numSensorsAlloc = numSensors = 0;
-  sensorArr = malloc(numSensorsAlloc*sizeof(SSState*));
+  sensorArr = debug_alloc(numSensorsAlloc*sizeof(SSState*));
 
   xSemaphoreGive(sensorArrLock);
 
@@ -139,7 +140,7 @@ void ssBlockUntilActive() {
 void registerSensorUpdateCallback(void(*func)(uint16_t i, SSState *sensor)) {
   if (xSemaphoreTake(sensorCallbackLock, SEMAPHORE_WAIT_TIME) == pdTRUE) {
     struct SensorCallback *callback =
-                                  malloc(sizeof(struct SensorCallback));
+                                  debug_alloc(sizeof(struct SensorCallback));
     callback->func = func,
     callback->next = NULL;
 
@@ -172,7 +173,7 @@ portTASK_FUNCTION_PROTO(smartSensorTX, pvParameters) {
     led_driver_set_mode(PATTERN_ENUMERATING);
 
     KnownIDs enumIDs = {
-      .arr = malloc(SS_MAX_SENSORS_PER_BUS * sizeof(SSState*)),
+      .arr = debug_alloc(SS_MAX_SENSORS_PER_BUS * sizeof(SSState*)),
       .len = 0,
       .maxLen = SS_MAX_SENSORS_PER_BUS,
     };
@@ -380,7 +381,7 @@ portTASK_FUNCTION_PROTO(smartSensorRX, pvParameters) {
           uint8_t frameNumber = (data[1] & 0b111) - SS_FIRST_FRAME;
           uint8_t inband = data[1] >> 7;
           uint8_t decodeLen = recLen-prefixLen-1;
-          uint8_t *data_decode = malloc(decodeLen);
+          uint8_t *data_decode = debug_alloc(decodeLen);
           cobs_decode(data_decode, data+prefixLen, decodeLen+1);
 
           // led_driver_set_mode(PATTERN_JUST_RED);
@@ -398,7 +399,7 @@ portTASK_FUNCTION_PROTO(smartSensorRX, pvParameters) {
             }
           }
 
-          if (data_decode) free(data_decode);
+          free(data_decode);
         }
       }
     }

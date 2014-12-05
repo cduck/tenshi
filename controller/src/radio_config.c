@@ -24,6 +24,7 @@
 #include "inc/queue.h"
 #include "inc/smartsensor/ssutil.h"
 #include "inc/runtime.h"
+#include "inc/debug_alloc.h"
 
 typedef struct {
   config_port *port;
@@ -54,7 +55,7 @@ void receiveConfigPort(config_port *port, size_t len) {
 }
 
 config_port *getDeviceList() {
-  config_port *port = malloc(sizeof(uint8_t) + sizeof(uint32_t)
+  config_port *port = debug_alloc(sizeof(uint8_t) + sizeof(uint32_t)
                                                    + SMART_ID_LEN*numSensors);
   port->id = ID_DEVICE_GET_LIST;
   port->data.device_list.count = numSensors;
