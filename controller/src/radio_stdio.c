@@ -30,6 +30,10 @@
 #define MAX_PRINTS_PER_PERIOD 20
 #define TICKS_PER_PERIOD 5000
 #define PRINT_OVERFLOW_ERROR "Error: Too many prints.  %u dropped.\n"
+#define PRINT_OVERFLOW_ERROR "Error: Too many characters to print.\n"
+#define MAX_PRINT_LEN 142  //Including null char
+
+char radio_write_buffer[MAX_PRINT_LEN];
 
 
 ssize_t radio_write(struct _reent *r, int fd, const char *ptr, size_t len) {
@@ -46,12 +50,19 @@ ssize_t radio_write(struct _reent *r, int fd, const char *ptr, size_t len) {
   }
   if (count < MAX_PRINTS_PER_PERIOD) {
     if (oldCount > MAX_PRINTS_PER_PERIOD) {
-      char *str = debug_alloc(len + sizeof(PRINT_OVERFLOW_ERROR) + 12);
-      int c = snprintf(str, sizeof(PRINT_OVERFLOW_ERROR) + 12,
-                       PRINT_OVERFLOW_ERROR, oldCount-MAX_PRINTS_PER_PERIOD);
-      if (c < 0) c = 0;
-      memcpy(str+c, ptr, len);
-      radioPushString(str, len+c);
+      size_t finalLen = len + sizeof(PRINT_OVERFLOW_ERROR) + 12;
+      int cutoff = finalLen > MAX_PRINT_LEN;
+      if (cutoff) {
+        finalLen = MAX_PRINT_LEN;
+      }
+      char *str = radio_write_buffer;
+      //=debug_alloc(len + sizeof(PRINT_OVERFLOW_ERROR) + 12);
+        int c = snprintf(str, sizeof(PRINT_OVERFLOW_ERROR) + 12,
+                         PRINT_OVERFLOW_ERROR, oldCount-MAX_PRINTS_PER_PERIOD);
+        if (c < 0) c = 0;
+        memcpy(str+c, ptr, len);
+        radioPushString(str, len+c);
+      }
     } else {
       char *str = debug_alloc(len);
       memcpy(str, ptr, len);
