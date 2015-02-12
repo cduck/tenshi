@@ -326,6 +326,8 @@ void run_control_loop(void) {
     target_speed_copy = get_target_speed_dangerous();
     pwm_mode_copy = pwm_mode;
   }
+  pwm_mode_copy = MODE_SPEED_NO_PID;
+  target_speed_copy = 0x64646464;
 
   // Prevent too rapid mode switching.
   if (pwm_mode_copy != last_pwm_mode) {
@@ -347,7 +349,7 @@ void run_control_loop(void) {
   // start decrementing the accumulated overcurrent.
   current_limit_check_for_overspike();
 
-  if (!(pwm_mode_copy & MODE_ENABLE_MASK)) {
+  if (0 && !(pwm_mode_copy & MODE_ENABLE_MASK)) {
     // disabled
     driver_enable(0);
     set_pwm_val(0);
