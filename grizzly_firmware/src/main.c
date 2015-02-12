@@ -37,6 +37,11 @@
 
 #include "inc/smartsensor/common.h"
 
+
+// Uncomment to enable acceleration limiting.
+// #define LIMIT_ACCELERATION
+
+
 // Registers
 unsigned char pwm_mode;
 DECLARE_I2C_REGISTER_C(FIXED1616, target_speed);
@@ -387,8 +392,10 @@ void run_control_loop(void) {
 
     // limit current
     pwm_val = current_limit_clip_speed(pwm_val);
+    #ifdef LIMIT_ACCELERATION
     // limit acceleration
     pwm_val = accel_limit_speed(pwm_val);
+    #endif
 
     // Compute the mode.
     driver_enable(1);
