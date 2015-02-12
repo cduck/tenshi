@@ -38,8 +38,10 @@
 #include "inc/smartsensor/common.h"
 
 
-// Uncomment to enable acceleration limiting.
-// #define LIMIT_ACCELERATION
+// Comment to completely disable acceleration limiting.
+#define LIMIT_ACCELERATION
+// Uncomment to set an inital acceleration limit at power on.
+// #define INITIAL_ACCELERATION_LIMIT
 
 
 // Registers
@@ -165,6 +167,8 @@ static inline int accel_limit_speed(int speed) {
   int target_speed;
   int accel_limit = get_max_acceleration();
 
+  if (accel_limit == 0) return;  // Don't limit if 0
+
   diff = speed - accel_limit_last_speed;
   clamped_diff = clamp_within(diff, -accel_limit, accel_limit);
   target_speed = accel_limit_last_speed + clamped_diff;
@@ -177,7 +181,11 @@ static inline int accel_limit_speed(int speed) {
 void init_control_loop(void) {
   // default values
   // Interrupts aren't enabled here
-  set_max_acceleration_dangerous(4);
+  #ifdef INITIAL_ACCELERATION_LIMIT
+    set_max_acceleration_dangerous(4);
+  #else
+    set_max_acceleration_dangerous(0);
+  #endif
   set_current_limit_adc_threshold_dangerous(68);
   // 5 Amps
   // Calculated using 5 / ((5 / 1024) * 1000 / 66)
