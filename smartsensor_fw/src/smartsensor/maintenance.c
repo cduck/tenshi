@@ -25,6 +25,7 @@
 
 #define TYPE_PING_PONG    0xFE
 #define TYPE_SLAVE_CONFIG 0xD0
+#define TYPE_DESCRIPTOR   0xD1
 
 uint8_t compare_ID(uint8_t *data);
 
@@ -35,6 +36,8 @@ void maintenancePacket(uint8_t type, uint8_t *data, uint8_t len,
   switch (type) {
     case TYPE_PING_PONG: maintenancePingPong(data, len, outData, outLen); break;
     case TYPE_SLAVE_CONFIG: maintenanceSlaveConfig(data, len, outData, outLen);
+      break;
+    case TYPE_DESCRIPTOR: maintenanceDescriptor(data, len, outData, outLen);
       break;
     default: break;
     // TODO(cduck): Add more maintenance packets
