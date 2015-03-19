@@ -62,7 +62,6 @@ ssize_t radio_write(struct _reent *r, int fd, const char *ptr, size_t len) {
         if (c < 0) c = 0;
         memcpy(str+c, ptr, len);
         radioPushString(str, len+c);
-      }
     } else {
       char *str = debug_alloc(len);
       memcpy(str, ptr, len);
