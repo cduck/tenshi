@@ -18,6 +18,12 @@
 #include <stdio.h>
 #include <string.h>
 
+// USB
+#include "usbd_core.h"
+#include "usbd_cdc.h"
+#include "usbd_cdc_if_template.h"
+#include "usbd_desc.h"
+
 // Interpreter
 #include <lua.h>
 #include <lualib.h>
@@ -48,9 +54,43 @@
 #include "ngl_types.h"   // NOLINT(build/include)
 
 
+USBD_HandleTypeDef USBD_Device;
+
+
 // TODO(rqou): This really doesn't go here.
 int8_t PiEMOSAnalogVals[7];
 uint8_t PiEMOSDigitalVals[8];
+
+static void SystemClock_Config(void)
+{
+  /*RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+
+  __PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
+  HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+  RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK |
+                                 RCC_CLOCKTYPE_HCLK |
+                                 RCC_CLOCKTYPE_PCLK1 |
+                                 RCC_CLOCKTYPE_PCLK2);
+
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);*/
+}
+
 
 int main(int argc, char **argv) {
   // Not useful
@@ -59,6 +99,16 @@ int main(int argc, char **argv) {
 
   init_malloc_lock();
   debug_alloc_init();
+
+  // USB Init
+  //HAL_Init();
+  SystemClock_Config();
+  //USBD_Init(&USBD_Device, &VCP_Desc, 0);
+  //
+  //USBD_RegisterClass(&USBD_Device, &USBD_CDC);
+  //USBD_CDC_RegisterInterface(&USBD_Device,
+  //                           &USBD_CDC_Template_fops);
+  //USBD_Start(&USBD_Device);
 
   // Setup I2C
   // i2c1_init();
