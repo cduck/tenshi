@@ -125,3 +125,27 @@ int main(int argc, char **argv) {
 
   vTaskStartScheduler();
 }
+
+
+caddr_t _sbrk(int increment) {
+  extern char end asm("end");
+  register char *pStack asm("sp");
+
+  static char *s_pHeapEnd;
+
+  if (!s_pHeapEnd)
+    s_pHeapEnd = &end;
+
+  if (s_pHeapEnd + increment > pStack)
+    return (caddr_t)-1;
+
+  char *pOldHeapEnd = s_pHeapEnd;
+  s_pHeapEnd += increment;
+  return (caddr_t)pOldHeapEnd;
+}
+
+//xtern PCD_HandleTypeDef hpcd;
+
+void OTG_FS_IRQHandler(void) {
+  //HAL_PCD_IRQHandler(&hpcd);
+}
