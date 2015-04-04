@@ -56,7 +56,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_ll_usb.h"
+//#include "stm32f4xx_ll_usb.h"
 #include "stm32f4xx_hal.h"
 
 /** @addtogroup STM32F4xx_LL_USB_DRIVER
