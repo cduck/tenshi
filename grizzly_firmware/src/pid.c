@@ -80,7 +80,9 @@ int do_pid_positional(FIXED1616 target) {
   int32_t neg_speed = old_encoder_val - encoder_val;
   old_encoder_val = encoder_val;
 
-  int32_t setpoint = fixed_to_int(target);
+  int32_t setpoint = (int32_t) target;  // For position control, target is NOT
+                                        // a 16.16 number.
+  // fixed_to_int(target);
   int32_t error = setpoint - encoder_val;
 
   // pray for no overflow (rest of function too)
