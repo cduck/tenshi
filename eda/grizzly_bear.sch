@@ -3457,29 +3457,6 @@ chip</description>
 <rectangle x1="-1.016" y1="-1.016" x2="1.016" y2="1.016" layer="31"/>
 <rectangle x1="-1.143" y1="-1.143" x2="1.143" y2="1.143" layer="39"/>
 </package>
-<package name="ANDERSON_HORIZONTAL">
-<description>2-pin 25A Anderson Connector
-Horizontal</description>
-<pad name="PIN1" x="0" y="3.937" drill="1.778" diameter="3.175" rot="R270"/>
-<pad name="PIN2" x="0" y="-3.937" drill="1.778" diameter="3.175" rot="R270"/>
-<wire x1="-34.544" y1="8.128" x2="-34.544" y2="0" width="0.127" layer="51"/>
-<wire x1="-34.544" y1="0" x2="-34.544" y2="-8.128" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="8.128" x2="-9.906" y2="3.937" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="3.937" x2="-9.906" y2="0" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="0" x2="-9.906" y2="-3.937" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="-3.937" x2="-9.906" y2="-8.128" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="0" x2="-34.544" y2="0" width="0.127" layer="51"/>
-<text x="-9.2075" y="6.985" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
-<wire x1="0" y1="3.937" x2="-9.906" y2="3.937" width="0.127" layer="51"/>
-<wire x1="0" y1="-3.937" x2="-9.906" y2="-3.937" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="8.128" x2="-34.544" y2="8.128" width="0.127" layer="51"/>
-<wire x1="-9.906" y1="-8.128" x2="-34.544" y2="-8.128" width="0.127" layer="51"/>
-<smd name="P$1" x="-5.334" y="3.937" dx="8.89" dy="1.27" layer="1"/>
-<smd name="P$3" x="-5.334" y="-3.937" dx="8.89" dy="1.27" layer="1"/>
-<rectangle x1="-34.544" y1="-8.128" x2="-9.906" y2="8.128" layer="39"/>
-<rectangle x1="-10.16" y1="1.27" x2="2.54" y2="6.35" layer="39"/>
-<rectangle x1="-10.16" y1="-6.35" x2="2.54" y2="-1.27" layer="39"/>
-</package>
 <package name="EIA3528">
 <wire x1="-0.9" y1="-1.6" x2="-2.6" y2="-1.6" width="0.2032" layer="21"/>
 <wire x1="-2.6" y1="-1.6" x2="-2.6" y2="1.55" width="0.2032" layer="21"/>
@@ -4084,6 +4061,36 @@ Designed for Hirose ZX62-AB-5PA</description>
 <wire x1="-2.8" y1="-1.175" x2="-3" y2="-1" width="0.127" layer="21" curve="-90"/>
 <wire x1="0.2" y1="-1.175" x2="0" y2="-1" width="0.127" layer="21" curve="-90"/>
 <text x="-3" y="1.5" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
+</package>
+<package name="CRYSTAL-SMD-5.0X3.2-2PIN">
+<smd name="P$1" x="-2.0955" y="0" dx="2.54" dy="1.905" layer="1" rot="R90"/>
+<smd name="P$2" x="2.0955" y="0" dx="2.54" dy="1.905" layer="1" rot="R90"/>
+<rectangle x1="-3.556" y1="-1.778" x2="3.556" y2="1.778" layer="39"/>
+<text x="-3.429" y="2.286" size="1.27" layer="25" ratio="15">&gt;NAME</text>
+<text x="-3.429" y="-3.429" size="1.27" layer="27" ratio="15">&gt;VALUE</text>
+</package>
+<package name="ANDERSON_HORIZONTAL">
+<description>2-pin 25A Anderson Connector
+Horizontal</description>
+<pad name="PIN1" x="0" y="3.937" drill="1.778" diameter="3.175" rot="R270"/>
+<pad name="PIN2" x="0" y="-3.937" drill="1.778" diameter="3.175" rot="R270"/>
+<wire x1="-34.544" y1="8.128" x2="-34.544" y2="0" width="0.127" layer="51"/>
+<wire x1="-34.544" y1="0" x2="-34.544" y2="-8.128" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="8.128" x2="-9.906" y2="3.937" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="3.937" x2="-9.906" y2="0" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="0" x2="-9.906" y2="-3.937" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="-3.937" x2="-9.906" y2="-8.128" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="0" x2="-34.544" y2="0" width="0.127" layer="51"/>
+<text x="-9.2075" y="6.985" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
+<wire x1="0" y1="3.937" x2="-9.906" y2="3.937" width="0.127" layer="51"/>
+<wire x1="0" y1="-3.937" x2="-9.906" y2="-3.937" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="8.128" x2="-34.544" y2="8.128" width="0.127" layer="51"/>
+<wire x1="-9.906" y1="-8.128" x2="-34.544" y2="-8.128" width="0.127" layer="51"/>
+<smd name="PIN1-LEAD" x="-5.334" y="3.937" dx="8.89" dy="1.27" layer="1"/>
+<smd name="PIN2-LEAD" x="-5.334" y="-3.937" dx="8.89" dy="1.27" layer="1"/>
+<rectangle x1="-34.544" y1="-8.128" x2="-9.906" y2="8.128" layer="39"/>
+<rectangle x1="-10.16" y1="1.27" x2="2.54" y2="6.35" layer="39"/>
+<rectangle x1="-10.16" y1="-6.35" x2="2.54" y2="-1.27" layer="39"/>
 </package>
 </packages>
 <symbols>
@@ -5005,6 +5012,15 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <technology name="">
 <attribute name="PIE-INT-REF-NUM" value="CRYSTAL"/>
 </technology>
+</technologies>
+</device>
+<device name="" package="CRYSTAL-SMD-5.0X3.2-2PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -6486,8 +6502,8 @@ http://www.alliedelec.com/images/products/datasheets/bm/ANDERSON_POWER_PRODUCTS/
 <devices>
 <device name="HORIZONTAL" package="ANDERSON_HORIZONTAL">
 <connects>
-<connect gate="G$1" pin="GND" pad="PIN1"/>
-<connect gate="G$1" pin="VCC" pad="PIN2"/>
+<connect gate="G$1" pin="GND" pad="PIN1 PIN1-LEAD"/>
+<connect gate="G$1" pin="VCC" pad="PIN2 PIN2-LEAD"/>
 </connects>
 <technologies>
 <technology name="">
@@ -6610,12 +6626,12 @@ OTG connector with ID pin</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DIGIKEY-PN" value="H11635CT-ND" constant="no"/>
+<attribute name="PIE-DIGIKEY-PN-PRI" value="H11635CT-ND" constant="no"/>
 <attribute name="PIE-INT-REF-NUM" value="USB"/>
 </technology>
 </technologies>
 </device>
-<device name="" package="USB-MICRO-AB-VERT">
+<device name="MICRO-AB-VERT" package="USB-MICRO-AB-VERT">
 <connects>
 <connect gate="G$1" pin="D+" pad="P$3"/>
 <connect gate="G$1" pin="D-" pad="P$2"/>
@@ -6626,7 +6642,7 @@ OTG connector with ID pin</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="PIE_DIGIKEY-PN" value="732-5959-1-ND" constant="no"/>
+<attribute name="PIE-DIGIKEY-PN" value="732-5959-1-ND" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -7367,7 +7383,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="C12" library="pie" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
 <part name="FRAME1" library="pie" deviceset="FRAME-LETTER" device="">
 <attribute name="AUTHOR" value="K. Mann, J. Chenn, R. Ou, J. Jacinto, S. Ghosh"/>
-<attribute name="REVISION" value="3A"/>
+<attribute name="REVISION" value="4A"/>
 </part>
 <part name="R18" library="pie" deviceset="R-US_" device="R0603" value="10k"/>
 <part name="SUPPLY1" library="pie" deviceset="GND" device=""/>

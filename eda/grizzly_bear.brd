@@ -29,7 +29,7 @@
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="17" fill="1" visible="no" active="yes"/>
+<layer number="22" name="bPlace" color="17" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="18" fill="1" visible="yes" active="yes"/>
@@ -158,8 +158,8 @@
 <text x="9.3925" y="4.2715" size="0.889" layer="21" font="vector" ratio="15" rot="SR270" align="top-center">M-</text>
 <text x="9.525" y="24.511" size="0.889" layer="21" font="vector" ratio="15" rot="SR270" align="top-center">BAT</text>
 <text x="9.525" y="7.747" size="0.889" layer="21" font="vector" ratio="15" rot="SR270" align="top-center">MOTOR</text>
-<text x="21.7932" y="0.874" size="1.27" layer="1" font="vector" ratio="15" align="bottom-center">v3 revC 25 Nov 2014</text>
-<text x="21.7932" y="2.2652" size="1.27" layer="21" font="vector" ratio="15" align="bottom-center">Grizzly Bear V3 Rev. C</text>
+<text x="21.7932" y="0.874" size="1.27" layer="1" font="vector" ratio="15" align="bottom-center">v4 revA 26 Nov 2015</text>
+<text x="21.7932" y="2.2652" size="1.27" layer="21" font="vector" ratio="15" align="bottom-center">Grizzly Bear V4 Rev. A</text>
 <text x="10.766" y="10.65" size="1.778" layer="21" font="vector" ratio="15">PiE</text>
 <text x="75.3618" y="24.638" size="0.889" layer="21" font="vector" ratio="20" align="top-right">Addr
 Select</text>
@@ -1900,9 +1900,9 @@ design rules under a new name.</description>
 </element>
 <element name="JP1" library="SparkFun-Connectors" package="1X02" value="M02PTH" x="38.862" y="2.5908" smashed="yes"/>
 <element name="USB1" library="pie" package="USB-MICRO-AB" value="USB-OTGMICRO-AB" x="64.5414" y="3.7084" smashed="yes">
-<attribute name="DIGIKEY-PN" value="H11635CT-ND" x="64.5414" y="3.7084" size="1.778" layer="27" display="off"/>
 <attribute name="PIE-INT-REF-NUM" value="USB" x="64.5414" y="3.7084" size="1.778" layer="27" display="off"/>
 <attribute name="NAME" x="63.5254" y="5.9944" size="1.27" layer="25" font="vector" ratio="10"/>
+<attribute name="PIE-DIGIKEY-PN-PRI" value="H11635CT-ND" x="64.5414" y="3.7084" size="1.778" layer="27" display="off"/>
 </element>
 </elements>
 <signals>
@@ -2668,7 +2668,7 @@ design rules under a new name.</description>
 <wire x1="68.707" y1="16.002" x2="68.707" y2="18.415" width="0.254" layer="1"/>
 <via x="61.7982" y="6.9088" extent="1-16" drill="1.3"/>
 <contactref element="USB1" pad="P$1"/>
-<wire x1="63.2414" y1="4.7084" x2="63.2414" y2="5.4656" width="0.254" layer="1"/>
+<wire x1="63.2414" y1="4.7084" x2="63.2414" y2="5.4656" width="0.3048" layer="1"/>
 <wire x1="63.2414" y1="5.4656" x2="61.7982" y2="6.9088" width="0.3048" layer="1"/>
 <wire x1="61.7982" y1="6.9088" x2="60.579" y2="8.128" width="0.3048" layer="1"/>
 <wire x1="60.579" y1="8.128" x2="60.579" y2="9.456" width="0.3048" layer="1"/>
@@ -3214,22 +3214,10 @@ design rules under a new name.</description>
 <approved hash="7,39,70c36b0a2b1630df"/>
 <approved hash="7,39,45adf6d076dcc5a1"/>
 <approved hash="7,39,0d676ef989c849c8"/>
-<approved hash="19,1,5a812e16e4857d6c"/>
 <approved hash="19,1,093cbebd218348af"/>
+<approved hash="19,1,5a812e16e4857d6c"/>
 <approved hash="19,1,e930d488d716eaae"/>
 <approved hash="19,1,f630cb88d78cea34"/>
-<approved hash="19,1,71d52ead2da372db"/>
-<approved hash="19,1,7617296f2a57752f"/>
-<approved hash="19,1,4813176b15974aef"/>
-<approved hash="19,1,a6151b6d19aea4d6"/>
-<approved hash="19,1,98112569266e9b16"/>
-<approved hash="19,1,9fd322ab219a9ce2"/>
-<approved hash="19,1,2a11b969ba512929"/>
-<approved hash="19,1,1415876d859116e9"/>
-<approved hash="19,1,2dd3beabbda52edd"/>
-<approved hash="19,1,56101368118954f1"/>
-<approved hash="19,1,6fd62aae29bd6cc5"/>
-<approved hash="19,1,68142d6c2e496b31"/>
 <approved hash="19,1,6e35314d2fc370bb"/>
 <approved hash="19,1,71172e6f2a57752f"/>
 <approved hash="19,1,73d52cad2b2b7453"/>
@@ -3239,30 +3227,42 @@ design rules under a new name.</description>
 <approved hash="19,1,2fd3bcabbb2d2855"/>
 <approved hash="19,1,2d11be69ba512929"/>
 <approved hash="19,1,3233a14bbfc52cbd"/>
+<approved hash="19,1,7036354e2bdd6ea5"/>
 <approved hash="19,1,6dd628ae2f356a4d"/>
 <approved hash="19,1,6f142a6c2e496b31"/>
-<approved hash="19,1,7036354e2bdd6ea5"/>
+<approved hash="19,1,71d52ead2da372db"/>
+<approved hash="19,1,7617296f2a57752f"/>
+<approved hash="19,1,4813176b15974aef"/>
+<approved hash="19,1,a6151b6d19aea4d6"/>
+<approved hash="19,1,9fd322ab219a9ce2"/>
+<approved hash="19,1,98112569266e9b16"/>
+<approved hash="19,1,2dd3beabbda52edd"/>
+<approved hash="19,1,2a11b969ba512929"/>
+<approved hash="19,1,1415876d859116e9"/>
+<approved hash="19,1,68142d6c2e496b31"/>
+<approved hash="19,1,6fd62aae29bd6cc5"/>
+<approved hash="19,1,56101368118954f1"/>
 <approved hash="19,1,aed3d02bd755a9ad"/>
 <approved hash="19,1,b333cdcbd3bdad45"/>
 <approved hash="19,1,ac11d2e9d629a8d1"/>
-<approved hash="19,1,4c152aed2ed5482d"/>
-<approved hash="19,1,533735cf2b414db9"/>
 <approved hash="19,1,4ed7282f2fa94951"/>
+<approved hash="19,1,533735cf2b414db9"/>
+<approved hash="19,1,4c152aed2ed5482d"/>
 <approved hash="19,1,52dc402447a3555b"/>
 <approved hash="19,1,501e42e646df5427"/>
 <approved hash="19,1,4f3c5dc4434b51b3"/>
 <approved hash="19,1,0f335dcb435a11a2"/>
 <approved hash="19,1,12d3402b47b2154a"/>
 <approved hash="19,1,101142e946ce1436"/>
-<approved hash="19,1,acd3d22bd1ddaf25"/>
 <approved hash="19,1,9515ebede9e99711"/>
+<approved hash="19,1,acd3d22bd1ddaf25"/>
 <approved hash="19,1,ab11d5e9d629a8d1"/>
+<approved hash="19,1,751113e9111577ed"/>
 <approved hash="19,1,4b152ded2ed5482d"/>
 <approved hash="19,1,4cd72a2f29214fd9"/>
-<approved hash="19,1,751113e9111577ed"/>
 <approved hash="19,1,571e45e646df5427"/>
-<approved hash="19,1,691a7be2791f6be7"/>
 <approved hash="19,1,50dc4224412b53d3"/>
+<approved hash="19,1,691a7be2791f6be7"/>
 <approved hash="19,1,29157bed790e2bf6"/>
 <approved hash="19,1,171145e946ce1436"/>
 <approved hash="19,1,10d3422b413a13c2"/>
