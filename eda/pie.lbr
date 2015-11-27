@@ -14244,11 +14244,12 @@ OTG connector with ID pin</description>
 </connects>
 <technologies>
 <technology name="">
+<attribute name="PIE-DIGIKEY-PN-PRI" value="H11635CT-ND" constant="no"/>
 <attribute name="PIE-INT-REF-NUM" value="USB"/>
 </technology>
 </technologies>
 </device>
-<device name="" package="USB-MICRO-AB-VERT">
+<device name="MICRO-AB-VERT" package="USB-MICRO-AB-VERT">
 <connects>
 <connect gate="G$1" pin="D+" pad="P$3"/>
 <connect gate="G$1" pin="D-" pad="P$2"/>
